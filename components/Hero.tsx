@@ -110,11 +110,14 @@ export default function Hero() {
               <div className="mt-6 h-px w-full bg-white/14" />
             </div>
 
-            <div className="relative mt-5 h-4">
-              <span className="t-meta absolute left-6 top-0 md:left-8">
+            {/* The right label sits on the 25% spine from md up. Below that
+                there is not enough room for both, so the row becomes a
+                simple flex and the label goes to the right edge. */}
+            <div className="relative mt-5 flex h-4 items-start justify-between px-6 md:block md:px-0">
+              <span className="t-meta md:absolute md:left-8 md:top-0">
                 {site.heroMetaLeft}
               </span>
-              <span className="t-meta absolute left-1/4 top-0 pl-3">
+              <span className="t-meta md:absolute md:left-1/4 md:top-0 md:pl-3">
                 {site.heroMetaRight}
               </span>
             </div>
@@ -140,9 +143,11 @@ function HeroStatic() {
             </FitText>
             <div className="mt-6 h-px w-full bg-white/14" />
           </div>
-          <div className="relative mt-5 h-4">
-            <span className="t-meta absolute left-6 top-0 md:left-8">{site.heroMetaLeft}</span>
-            <span className="t-meta absolute left-1/4 top-0 pl-3">{site.heroMetaRight}</span>
+          <div className="relative mt-5 flex h-4 items-start justify-between px-6 md:block md:px-0">
+            <span className="t-meta md:absolute md:left-8 md:top-0">{site.heroMetaLeft}</span>
+            <span className="t-meta md:absolute md:left-1/4 md:top-0 md:pl-3">
+              {site.heroMetaRight}
+            </span>
           </div>
         </div>
       </div>

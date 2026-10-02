@@ -103,7 +103,7 @@ export default function Contact() {
               <div>
                 <dt className="t-meta muted-2">Email</dt>
                 <dd className="t-row m-0 mt-2">
-                  <a href={`mailto:${site.email}`} className="edge-link">
+                  <a href={`mailto:${site.email}`} className="edge-link inline-block py-1">
                     {site.email}
                   </a>
                 </dd>
@@ -129,7 +129,7 @@ export default function Contact() {
               <ul className="mt-4 space-y-1.5">
                 {site.socials.map((s) => (
                   <li key={s.label}>
-                    <a href={s.href} target="_blank" rel="noreferrer" className="t-meta edge-link">
+                    <a href={s.href} target="_blank" rel="noreferrer" className="t-meta edge-link inline-block py-1.5">
                       {s.label}
                     </a>
                   </li>
@@ -212,7 +212,7 @@ export default function Contact() {
                 {error && (
                   <p role="alert" className="t-body mt-8 text-white">
                     {error}{" "}
-                    <a href={`mailto:${site.email}`} className="edge-link">
+                    <a href={`mailto:${site.email}`} className="edge-link inline-block py-1">
                       {site.email}
                     </a>
                   </p>

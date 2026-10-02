@@ -107,25 +107,30 @@ export default function Nav() {
           <Link
             href="/"
             aria-label={`${site.fullName}, home`}
-            className="absolute left-6 top-1/2 flex -translate-y-1/2 items-center gap-3 md:left-8"
+            className="absolute left-6 top-1/2 flex -translate-y-1/2 items-center gap-3 py-3 md:left-8"
           >
 <Logo height={22} />
           </Link>
 
+          {/* The flip needs an 18px clipper, which is under the 24px minimum
+              touch target. The clipper moved to an inner span so the button
+              itself can carry padding and grow the hit area invisibly. */}
           <button
             onClick={() => setOpen((v) => !v)}
-            className="t-meta absolute right-6 top-1/2 h-[18px] -translate-y-1/2 overflow-hidden text-[15px] text-white md:right-8"
+            className="t-meta absolute right-6 top-1/2 -translate-y-1/2 px-2 py-3 text-[15px] text-white md:right-6"
             aria-expanded={open}
             aria-label={open ? "Close menu" : "Open menu"}
           >
-            <motion.span
-              className="flex flex-col"
-              animate={{ y: open ? "-50%" : "0%" }}
-              transition={{ duration: 0.5, ease: EASE }}
-            >
-              <span className="block h-[18px] leading-[18px]">Menu</span>
-              <span className="block h-[18px] leading-[18px]">Close</span>
-            </motion.span>
+            <span className="block h-[18px] overflow-hidden">
+              <motion.span
+                className="flex flex-col"
+                animate={{ y: open ? "-50%" : "0%" }}
+                transition={{ duration: 0.5, ease: EASE }}
+              >
+                <span className="block h-[18px] leading-[18px]">Menu</span>
+                <span className="block h-[18px] leading-[18px]">Close</span>
+              </motion.span>
+            </span>
           </button>
         </div>
       </motion.header>

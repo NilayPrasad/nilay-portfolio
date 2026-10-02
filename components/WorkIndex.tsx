@@ -45,7 +45,7 @@ export default function WorkIndex() {
                 <button
                   key={c.label}
                   onClick={() => setActive(c.label)}
-                  className="flex w-full items-center justify-between transition-opacity duration-500"
+                  className="flex w-full items-center justify-between py-1.5 transition-opacity duration-500"
                   style={{ opacity: on ? 1 : 0.5 }}
                 >
                   <span className="t-card">{c.label}</span>

@@ -56,16 +56,16 @@ export default function Footer() {
           <div className="rule grid12 gap-y-7 py-8">
             <div className="col-span-6 lg:col-span-3">
               <span className="t-meta muted-2 mb-3 block">Contact</span>
-              <a href={`mailto:${site.email}`} className="t-meta edge-link text-white">
+              <a href={`mailto:${site.email}`} className="t-meta edge-link inline-block py-1.5 text-white">
                 {site.email}
               </a>
             </div>
             <div className="col-span-6 lg:col-span-3">
               <span className="t-meta muted-2 mb-3 block">Menu</span>
-              <ul className="space-y-1.5">
+              <ul>
                 {nav.map((n) => (
                   <li key={n.href}>
-                    <Link href={n.href} className="t-meta edge-link text-white">
+                    <Link href={n.href} className="t-meta edge-link inline-block py-1.5 text-white">
                       {n.label}
                     </Link>
                   </li>
@@ -74,14 +74,14 @@ export default function Footer() {
             </div>
             <div className="col-span-6 lg:col-span-3">
               <span className="t-meta muted-2 mb-3 block">Elsewhere</span>
-              <ul className="space-y-1.5">
+              <ul>
                 {site.socials.map((s) => (
                   <li key={s.label}>
                     <a
                       href={s.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="t-meta edge-link text-white"
+                      className="t-meta edge-link inline-block py-1.5 text-white"
                     >
                       {s.label}
                     </a>
