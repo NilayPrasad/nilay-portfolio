@@ -6,7 +6,7 @@ import { Arrow } from "./Monogram";
 import Clock from "./Clock";
 import { site } from "@/lib/site";
 
-const BUDGETS = ["< 5k", "5–15k", "15–40k", "40k +"];
+const BUDGETS = ["< 5k", "5-15k", "15-40k", "40k +"];
 const SUBJECTS = ["New project", "Collaboration", "Speaking", "Something else"];
 
 /** §9 — contact, rebranded. No FAQ. */
@@ -15,6 +15,64 @@ export default function Contact() {
   const [budget, setBudget] = useState(BUDGETS[1]);
   const [agreed, setAgreed] = useState(false);
   const [sent, setSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  /* If the server has no mail credentials it says so rather than pretending,
+     and we hand the message to the visitor's own mail client. Better than a
+     success screen over a message that went nowhere. */
+  const handoff = (d: Record<string, string>) => {
+    const body = [
+      `Name: ${d.name}`,
+      `Email: ${d.email}`,
+      `Company: ${d.company || "—"}`,
+      `Subject: ${d.subject}`,
+      `Budget: ${d.budget || "—"}`,
+      "",
+      d.message,
+    ].join("\n");
+    window.location.href =
+      `mailto:${site.email}?subject=${encodeURIComponent(`${d.subject} — ${d.name}`)}` +
+      `&body=${encodeURIComponent(body)}`;
+  };
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    setBusy(true);
+    const form = new FormData(e.currentTarget);
+    const data = {
+      name: String(form.get("name") || ""),
+      email: String(form.get("email") || ""),
+      company: String(form.get("company") || ""),
+      message: String(form.get("message") || ""),
+      website: String(form.get("website") || ""),
+      subject,
+      budget,
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const out = await res.json().catch(() => ({}));
+
+      if (res.ok && out.ok) {
+        setSent(true);
+      } else if (out.configured === false) {
+        handoff(data);
+        setSent(true);
+      } else {
+        setError(out.error || "Something went wrong. Please email me directly.");
+      }
+    } catch {
+      setError("Network error. Please email me directly.");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
     <>
@@ -96,14 +154,17 @@ export default function Contact() {
                 <p className="t-body mt-5">I&rsquo;ll come back to you within two working days.</p>
               </motion.div>
             ) : (
-              <form
-                className="mt-10"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  // No backend wired yet — point this at your endpoint.
-                  setSent(true);
-                }}
-              >
+              <form className="mt-10" onSubmit={onSubmit}>
+                {/* Honeypot: off-screen for sighted users, hidden from the
+                    a11y tree, and never autofilled. */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden
+                  className="pointer-events-none absolute left-[-9999px] h-0 w-0 opacity-0"
+                />
                 <Field label="Name" name="name" placeholder="Your name" required />
                 <Field label="Email" name="email" type="email" placeholder="you@company.com" required />
                 <Field label="Company" name="company" placeholder="Optional" />
@@ -148,12 +209,22 @@ export default function Contact() {
                   </span>
                 </label>
 
+                {error && (
+                  <p role="alert" className="t-body mt-8 text-white">
+                    {error}{" "}
+                    <a href={`mailto:${site.email}`} className="edge-link">
+                      {site.email}
+                    </a>
+                  </p>
+                )}
+
                 <button
                   type="submit"
-                  disabled={!agreed}
+                  disabled={!agreed || busy}
+                  aria-busy={busy}
                   className="pill t-meta mt-11 flex w-full items-center justify-between disabled:opacity-30"
                 >
-                  Send enquiry <Arrow />
+                  {busy ? "Sending…" : "Send enquiry"} <Arrow />
                 </button>
               </form>
             )}
