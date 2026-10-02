@@ -8,3 +8,6 @@ out
 # Un-redacted originals. Must never be committed.
 .redaction-backup/
 .vercel
+
+# TypeScript incremental build cache
+tsconfig.tsbuildinfo
