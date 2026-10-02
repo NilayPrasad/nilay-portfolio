@@ -1,73 +1,67 @@
-# NNP — Portfolio
+# Nilay Prasad — Portfolio
 
-Dark, editorial, motion-heavy personal portfolio. Next.js 15 (App Router) ·
-TypeScript · Tailwind v4 · Motion · Lenis.
+Dark-first, editorial, motion-led personal portfolio.
+
+Next.js 15 (App Router) · TypeScript · Tailwind CSS v4 · Motion · Lenis
 
 ```bash
 npm install
-npm run dev      # http://localhost:3000
-npm run build
+npm run dev                    # http://localhost:3000
+npm run build && npm start     # production
 ```
 
 ## Pages
 
-| Route          | Sections                                                               |
-| -------------- | ---------------------------------------------------------------------- |
-| `/`            | Hero → 01 Index → 02 Service → 03 Work → 04 Value + Key Figures → 05 Method → 06 Reviews → Footer |
-| `/work`        | Filterable index, feed and grid views                                   |
-| `/work/[slug]` | Cover, details + live-preview link, parallax gallery, next project      |
-| `/about`       | 01 Profile (stats, education, timeline) → 02 Culture → 03 Awards → 04 Certifications |
-| `/contact`     | Enquiry form and details                                                |
+| Route          | Contents                                                                     |
+| -------------- | ---------------------------------------------------------------------------- |
+| `/`            | Hero → Service → Selected Projects → Reviews → Footer                        |
+| `/work`        | Filterable index of all six case studies                                     |
+| `/work/[slug]` | Outcomes, project details, full case study, parallax gallery, next project   |
+| `/about`       | Profile → Experience → Timeline → Key Features → Method → Awards → Certified → Education → Capabilities |
+| `/contact`     | Enquiry form and details                                                     |
 
-No pricing, no news, no FAQ anywhere. Awards replaces the reference's Client
-section; Certifications replaces Team.
+## How it is put together
 
-## Design system
+**Design tokens** live in `app/globals.css`. Dark is the default; `.on-light`
+inverts the same variables for the Method panel. Component classes sit in
+`@layer components` on purpose, because unlayered CSS outranks every Tailwind
+utility regardless of specificity.
 
-- **Colour** — dark-first. `--black #000` ground, `--panel #0D0F12`, white text,
-  `--muted #8A8C90`. The Method section is the one light panel (`--light #D7D7D5`),
-  and it inverts the same variables via `.on-light`, so every child follows.
-- **Field** — the signature background: navy → electric blue → black with a teal
-  accent and a sand highlight, under a drifting ordered-halftone dot layer.
-- **Type** — Switzer (display and text), Fragment Mono (labels, numbers, meta).
-  Switzer is the face the reference itself ships; it sits in the same
-  neo-grotesque family as Neue Haas Grotesk Display.
-- **Grid** — 12 columns, 1512px max, 5–6vw gutters. Stacks to 6 columns at 768px.
-- **Line-work** — `.rule` hairlines, `.rail` vertical dividers, `.tick-rule` row
-  underlines with the L-shaped riser, and `<PlusFrame>` corner marks.
-- **Easing** — one curve, `cubic-bezier(0.16, 1, 0.3, 1)`, shared by CSS, Motion
-  and Lenis so scroll momentum matches element motion.
+**All copy and every swappable asset** is in `lib/site.ts`, with the six case
+studies in `lib/projects.ts`. Changing content should not mean touching a
+component.
 
-## Motion primitives
+**Motion** is centralised in `components/motion.tsx` and shares one easing
+curve. Everything scroll-driven degrades to a static layout under
+`prefers-reduced-motion`.
 
-| Component       | Behaviour                                                          |
-| --------------- | ------------------------------------------------------------------ |
-| `ScrollSplit`   | Per-unit mask welded to a scroll value — scrubs both ways, exits on a hard clip |
-| `SplitText`     | Per-character mask reveal, fires once on entry                      |
-| `SkewMedia`     | Frame skews to a parallelogram and resolves at centre; image counter-skews, parallaxes and zooms |
-| `FitText`       | Measures and solves for the font-size that fills the container      |
-| `GradientField` | The dithered blue field, animated on transform only                 |
-| `Counter`       | Digit strips roll to the target value                               |
+Notable pieces:
 
-`prefers-reduced-motion` disables Lenis, every skew and parallax, and collapses
-all transitions to instant.
+- `Hero.tsx` — a pinned 320vh sequence with a scroll-scrubbed word mask over a
+  ported WebGL field (`ShaderField.tsx`)
+- `Services.tsx` — a video reel; hover previews, click holds, and with neither
+  it plays the set end to end
+- `WorkShowcase.tsx` — featured work as sticky siblings of one parent, so each
+  card is covered by the next rather than scrolling past it
+- `Method.tsx` — a side-scrolling track of full-bleed video panels, scrubbed by
+  vertical scroll
 
-## Replacing the placeholders
+## Accessibility
 
-Everything swappable lives in [`lib/site.ts`](lib/site.ts).
+Audited against the rendered pages, not the markup: zero WCAG AA contrast
+failures, no heading-level skips, a skip link, a visible 2px focus ring, and
+one `banner` / `main` / `contentinfo` landmark per page.
 
-**Images.** Change the `img()` helper to `/images/${seed}.jpg` and drop files
-into `public/images/`. Seeds are already named for what they hold (`monolith`,
-`clearstate-a`, `nnp-portrait-a`, …).
+## A note on the case-study imagery
 
-**Background film.** Set `fieldVideo` to `/field.mp4` and add the file. Until
-then the CSS gradient field runs in its place — no broken frame, no code change.
+The screens in `public/projects/` are redacted. Employer marks, confidential
+footers, client and product names, and person names are destructively
+downsampled, not covered — the detail is gone from the file rather than hidden
+behind an overlay. Case-study copy is white-labelled throughout; `/about` is
+the only place real company names appear, because it is the CV.
 
-**Desaturation.** Placeholder photography is forced greyscale in
-`app/globals.css` so stand-in stock can't fight the blue field. Delete the
-`.media img, .media video, .plate` filter rule once real, graded art is in.
+## Still open
 
-## Not yet wired
-
-The contact form calls `setSent(true)` on submit — point it at your endpoint
-(Formspree, Resend, a route handler) in `components/Contact.tsx`.
+- Contact form has no backend; `Contact.tsx` only sets local state
+- Two of the six case studies are marked "coming soon" and have no imagery
+- Method panels 03 and 04 are waiting on background video
