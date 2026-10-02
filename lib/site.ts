@@ -17,7 +17,7 @@ export const site = {
   /** §2 hero meta row — left label, right label. */
   heroMetaLeft: "Based in India",
   heroMetaRight: "AI Design Engineer",
-  email: "Nilay.n.prasad@accenture.com",
+  email: "nilay.n.prasad@gmail.com",
   hours: "Monday to Friday, 9am to 6pm IST",
   place: "Pune, India (Working globally)",
   socials: [
