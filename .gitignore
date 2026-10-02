@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+.DS_Store
+*.log
+.env*
+
+# Un-redacted originals. Must never be committed.
+.redaction-backup/

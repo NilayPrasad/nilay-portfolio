@@ -1,0 +1,414 @@
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────────────────────────────────
+   NNP — Design tokens (§2)
+   Dark-first. Light is the exception, used for the Method section only.
+   ────────────────────────────────────────────────────────────────────── */
+@theme {
+  --color-black: #000000;
+  --color-near-black: #0a0a0a;
+  --color-panel: #0d0f12;
+  --color-ink: #0b0b0b;
+  --color-light: #d7d7d5;
+  --color-light-2: #e4e4e2;
+  --color-white: #ffffff;
+  --color-muted: #8a8c90;
+  --color-muted-2: #75777c;
+
+  /* Signature gradient field stops */
+  --color-field-0: #050608;
+  --color-field-1: #0a1430;
+  --color-field-2: #12245c;
+  --color-field-3: #1e3a8a;
+  --color-teal: #2cc7b5;
+  --color-sand: #c9bfa6;
+
+  --font-sans: "Switzer", "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Fragment Mono", ui-monospace, "SF Mono", monospace;
+
+  --breakpoint-md: 810px;
+  --breakpoint-lg: 1200px;
+}
+
+:root {
+  --bg: #000000;
+  --fg: #ffffff;
+  --meta: #8a8c90;
+  --meta-2: #75777c;   /* 4.69:1 on #000, WCAG AA for normal text */
+  --line: rgba(255, 255, 255, 0.14);
+
+  /* §2.2 — 12 columns, ~1512px content, 5–6vw gutters */
+  --maxw: 1512px;
+  --gutter: 24px;
+
+  /* §4 — one curve, everywhere */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 810px) {
+  :root { --gutter: 5vw; }
+}
+@media (min-width: 1200px) {
+  :root { --gutter: 5.5vw; }
+}
+
+/* Light sections invert the same variables, so every child component
+   (hairlines, ticks, plus marks, meta text) follows without knowing. */
+.on-light {
+  --bg: var(--color-light);
+  --fg: var(--color-ink);
+  --meta: #46484e;     /* 6.34:1 on the light panel */
+  --meta-2: #585a60;   /* 4.78:1 on the light panel */
+  --line: rgba(0, 0, 0, 0.16);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+* { box-sizing: border-box; }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  background: #000;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.45;
+  overscroll-behavior-y: none;
+}
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+::selection { background: #fff; color: #000; }
+.on-light ::selection { background: #000; color: #fff; }
+
+/* These are resets, so they belong in @layer base — unlayered they would
+   beat every Tailwind utility, and `padding: 0` silently swallowed the
+   `py-*` on any button that wanted its own padding. */
+@layer base {
+  /* Chrome's default ring is a 1px blue that barely reads on this
+     palette. A white (or black, on the light panel) ring with an offset
+     is unmissable and matches the line-work. */
+  :focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; border-radius: 1px; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   Everything below is a component class, and it lives in @layer
+   components on purpose. Unlayered CSS beats *every* Tailwind utility
+   regardless of specificity, so an unlayered `.edge-link { display:
+   inline-block }` silently wins over `hidden`. Inside the components
+   layer, utilities override as expected and no `!important` is needed.
+   ────────────────────────────────────────────────────────────────────── */
+@layer components {
+  /* ── Layout (§2.2) ──────────────────────────────────────────────────── */
+  .hero-gutter {
+    padding-inline: 24px;
+  }
+  @media (min-width: 810px) {
+    .hero-gutter { padding-inline: 32px; }
+  }
+
+  .shell {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    max-width: calc(var(--maxw) + 2 * var(--gutter));
+  }
+
+  .grid12 {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+  @media (max-width: 768px) {
+    .grid12 { grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: 16px; }
+  }
+
+  /* §2.3 — section rhythm */
+  .section { padding-block: 64px; }
+  @media (min-width: 810px) { .section { padding-block: 120px; } }
+  @media (min-width: 1200px) { .section { padding-block: 160px; } }
+
+  .rule { border-top: 1px solid var(--line); }
+  .rule-b { border-bottom: 1px solid var(--line); }
+  .hairline { border: 1px solid var(--line); }
+  /* Interactive controls sit on a firmer edge than structural rules —
+     --line is tuned for dividers and disappears on a button at 1x. */
+  .hairline-ctl { border: 1px solid rgba(255, 255, 255, 0.4); }
+  .on-light .hairline-ctl { border-color: rgba(0, 0, 0, 0.5); }
+
+  /* §2.2 — the vertical rail that divides split sections. Hidden once the
+     layout stacks, where it would read as a stray mark. */
+  .rail { position: relative; }
+  .rail::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 1px;
+    background: var(--line);
+  }
+  @media (max-width: 768px) {
+    .rail::before { top: 0; bottom: auto; left: 0; right: 0; width: auto; height: 1px; }
+  }
+
+  /* ── §2.4 L-tick row underline ──────────────────────────────────────────
+     A hairline with a short vertical riser at its left end. The riser is
+     what reads as the "small edge" on every list row and nav item. */
+  .tick-rule {
+    position: relative;
+    border-bottom: 1px solid var(--line);
+  }
+  .tick-rule::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 1px;
+    height: 7px;
+    background: var(--line);
+  }
+
+  /* Hover: the underline brightens and draws across from the left. */
+  .tick-rule::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.85;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.7s var(--ease);
+  }
+  .tick-rule:hover::after,
+  .group:hover .tick-rule::after { transform: scaleX(1); }
+
+  /* ── Inline link with a persistent underline that retracts on hover ──── */
+  .edge-link { position: relative; display: inline-block; }
+  .edge-link::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -0.18em;
+    height: 1px;
+    background: currentColor;
+    transform-origin: left;
+    transition: transform 0.6s var(--ease);
+  }
+  .edge-link:hover::after { transform: scaleX(0); transform-origin: right; }
+
+  /* Underline that draws in on hover, for headings that may wrap. */
+  .edge-underline { position: relative; display: block; width: max-content; max-width: 100%; }
+  .edge-underline::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -0.06em;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.7s var(--ease);
+  }
+  .group:hover .edge-underline::after { transform: scaleX(1); }
+
+  /* ── §2.5 Textures ──────────────────────────────────────────────────── */
+  /* Ordered halftone dot field. Drifts so the background never sits still. */
+  .halftone::after {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    pointer-events: none;
+    background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.85) 0.8px, transparent 1.1px);
+    background-size: 3.5px 3.5px;
+    opacity: 0.3;
+    mix-blend-mode: overlay;
+    animation: halftone-drift 34s linear infinite;
+  }
+  /* Blob drift for the gradient field — transform only, so it composites
+     on the GPU and doesn't repaint during scroll. */
+  @keyframes field-drift {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(4vw, -3vh, 0) scale(1.12); }
+    100% { transform: translate3d(-3vw, 4vh, 0) scale(0.95); }
+  }
+
+  @keyframes halftone-drift {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(4px, 8px, 0); }
+  }
+
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.2;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* Light sections take a softer, scratchier grain. */
+  .on-light .grain::before { opacity: 0.35; mix-blend-mode: multiply; }
+
+  /* ── §2.6 Buttons ───────────────────────────────────────────────────── */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7em;
+    padding: 0.85em 1.6em;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(255, 255, 255, 0.06);
+    transition: background 0.5s var(--ease), border-color 0.5s var(--ease);
+  }
+  .pill:hover { background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.4); }
+  .pill svg { transition: transform 0.5s var(--ease); }
+  .pill:hover svg { transform: translateX(3px); }
+
+  .on-light .pill { background: rgba(0, 0, 0, 0.04); border-color: rgba(0, 0, 0, 0.26); }
+  .on-light .pill:hover { background: rgba(0, 0, 0, 0.1); border-color: rgba(0, 0, 0, 0.4); }
+
+  /* ── §3 Type scale ──────────────────────────────────────────────────── */
+  .t-wordmark {
+    font-size: clamp(3.5rem, 13vw, 15rem);
+    line-height: 0.82;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .t-section {
+    font-size: clamp(3rem, 8vw, 7.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+  }
+  .t-numeral {
+    font-size: clamp(3rem, 8vw, 7.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    font-weight: 500;
+  }
+  .t-statement {
+    font-size: clamp(1.75rem, 2.9vw, 3.4rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    font-weight: 400;
+  }
+  .t-sub {
+    font-size: 15px;
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  @media (min-width: 810px) { .t-sub { font-size: 16px; } }
+
+  .t-body {
+    font-size: 15px;
+    line-height: 1.45;
+    font-weight: 400;
+    color: var(--meta);
+  }
+  @media (min-width: 810px) { .t-body { font-size: 17px; } }
+
+  .t-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--meta);
+  }
+  @media (min-width: 810px) { .t-meta { font-size: 13px; } }
+
+  /* ── Work index type, matched to the reference build ──────────── */
+  .t-works {
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1em;
+    text-transform: uppercase;
+  }
+  @media (min-width: 810px) { .t-works { font-size: 32px; } }
+  @media (min-width: 1200px) { .t-works { font-size: 42px; } }
+
+  .t-card {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    line-height: 1.4em;
+  }
+
+  .t-tag {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.5em;
+  }
+
+  /* Featured card title, matched to the reference build. */
+  .t-card-title {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 116%;
+  }
+  @media (min-width: 810px) { .t-card-title { font-size: 28px; } }
+  @media (min-width: 1200px) { .t-card-title { font-size: 32px; } }
+
+  .t-row {
+    font-size: 16px;
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  @media (min-width: 810px) { .t-row { font-size: 18px; } }
+
+  .t-lede {
+    font-size: clamp(1.375rem, 2.2vw, 2rem);
+    line-height: 1.22;
+    letter-spacing: -0.015em;
+    font-weight: 400;
+  }
+
+  .muted { color: var(--meta); }
+  .muted-2 { color: var(--meta-2); }
+
+  /* ── Split-text mask reveal (§4.2) ──────────────────────────────────── */
+  .split-unit { display: inline-block; will-change: transform; }
+
+  /* ── Media ──────────────────────────────────────────────────────────── */
+  .media { position: relative; overflow: hidden; background: var(--color-panel); }
+  .media > img,
+  .media > video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
