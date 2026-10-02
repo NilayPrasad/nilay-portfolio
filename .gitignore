@@ -7,3 +7,4 @@ out
 
 # Un-redacted originals. Must never be committed.
 .redaction-backup/
+.vercel
