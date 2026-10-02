@@ -36,7 +36,10 @@ export default function FitText({
     const current = text.getBoundingClientRect().width;
     if (!avail || !current) return;
 
-    const next = Math.min(maxSize, (sizeRef.current * avail) / current);
+    // Trimmed a hair under the exact solve: a fitted line that lands at
+    // 100.1% of the box wraps or spills, and iOS resolves fonts.ready before
+    // the face is guaranteed to be applied, so the metrics can be off.
+    const next = Math.min(maxSize, (sizeRef.current * avail * 0.998) / current);
     // Skip sub-pixel churn, otherwise the observer can trade blows with itself.
     if (Math.abs(next - sizeRef.current) < 0.3) return;
     sizeRef.current = next;

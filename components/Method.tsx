@@ -81,9 +81,9 @@ export default function Method() {
       <section
         ref={ref}
         aria-label="Method"
-        className="on-light relative hidden h-[620vh] md:block"
+        className="on-light relative hidden h-[620svh] md:block"
       >
-        <div className="sticky top-0 h-screen overflow-hidden">
+        <div className="sticky top-0 h-[100svh] overflow-hidden">
           <motion.div
             className="flex h-full"
             style={{ x, width: `${TOTAL * 100}vw`, willChange: "transform" }}

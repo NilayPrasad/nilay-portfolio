@@ -32,7 +32,7 @@ export default function WorkIndex() {
         </div>
       </header>
 
-      <div className="h-[10vh] lg:h-[16vh]" />
+      <div className="h-[10svh] lg:h-[16svh]" />
 
       {/* ── Body ────────────────────────────────────────────────────── */}
       <section className="shell grid grid-cols-2 gap-x-2.5 gap-y-5 pb-16 lg:grid-cols-3 lg:gap-2.5 lg:pb-[200px]">

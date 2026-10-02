@@ -104,7 +104,16 @@ function Unit({
   const stops = [e0, e1, Math.max(x0, e1 + 0.0001), Math.max(x1, e1 + 0.0002)];
 
   const y = useTransform(progress, stops, ["115%", "0%", "0%", "-118%"]);
-  const opacity = useTransform(progress, stops, [1, 1, 1, 0]);
+
+  // The two hero statements are stacked at the same origin and rely on the
+  // mask to hide whichever is not active. If compositing hiccups the mask,
+  // both render and the sentences sit on top of each other. Fading in from
+  // just before the entry window means an inactive unit is invisible even
+  // when the mask fails.
+  const pre = Math.max(0, e0 - 0.02);
+  const oStops = pre < e0 ? [pre, e0, stops[1], stops[2], stops[3]] : stops;
+  const oVals = pre < e0 ? [0, 1, 1, 1, 0] : [1, 1, 1, 0];
+  const opacity = useTransform(progress, oStops, oVals);
 
   return (
     <motion.span className="split-unit" style={{ y, opacity }}>

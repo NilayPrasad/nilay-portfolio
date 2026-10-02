@@ -14,6 +14,10 @@ export default function SmoothScroll() {
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Touch devices keep native scrolling. iOS momentum and Lenis's own rAF
+    // loop fight each other, and the scroll-linked timelines read far more
+    // reliably straight off the platform scroller.
+    if (window.matchMedia("(pointer: coarse)").matches) return;
 
     const lenis = new Lenis({
       duration: 1.15,

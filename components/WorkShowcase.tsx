@@ -88,7 +88,7 @@ function StackCard({
   return (
     // The sticky block is taller than the card, which is what gives each
     // project a moment to hold before the next one arrives.
-    <div className="sticky top-[116px] h-[72vh] md:h-[78vh]">
+    <div className="sticky top-[116px] h-[72svh] md:h-[78svh]">
       <motion.div
         style={{
           scale: reduce ? 1 : scale,
@@ -97,7 +97,7 @@ function StackCard({
         }}
       >
         <Link href={`/work/${project.slug}`} className="group block">
-          <div className="relative h-[62vh] max-h-[720px] min-h-[360px] w-full overflow-hidden bg-[#111] p-1.5">
+          <div className="relative h-[62svh] max-h-[720px] min-h-[360px] w-full overflow-hidden bg-[#111] p-1.5">
             {/* Labelled slot behind the glass, with its own parallax once
                 real artwork replaces it. */}
             <div className="absolute inset-0 overflow-hidden">
