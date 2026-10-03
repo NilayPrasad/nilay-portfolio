@@ -155,69 +155,100 @@ export const method = [
 ];
 
 /* ── 06 / Reviews ────────────────────────────────────────────────────
-   Real feedback, condensed. Role labels only: the reviewers are named in
-   Nilay's own records, and this repo is public, so no names live here. */
+   Grouped by position. `group` drives the rail, `role` is the exact title
+   shown with the quote, and several people can sit under one group.
+
+   `name` is only filled where the attribution is unambiguous. Where it is
+   blank the quote shows the role alone rather than guessing which of two
+   people said which thing. */
 export const reviewsIntro =
   "Feedback from leads, managers, and the people I work with.";
 
-export const reviews = [
+export type Review = { quote: string; group: string; role: string; name?: string };
+
+export const reviews: Review[] = [
   {
     quote:
       "Nilay thinks clearly and generates strong ideas, with quick turnaround and dependable quality. He is highly collaborative, pairs well with peers, and brings real value to the team.",
+    group: "Assistant Director",
     role: "Assistant Director",
-  },
-  {
-    quote:
-      "He has levelled up his craft with AI-first workflows, embedding AI across research, prototyping, and design systems, and delivering production-ready work across several projects that exceeded the target for AI adoption.",
-    role: "Associate Manager, People Lead",
+    name: "Himanshu Pratap Singh",
   },
   {
     quote:
       "Strong, consistent design quality and a thorough grasp of requirements, keeping user needs and business goals aligned. His investigative approach and energy in brainstorms lift the whole team.",
+    group: "Senior Manager",
     role: "Senior Manager",
-  },
-  {
-    quote:
-      "A genuine force in the design community: he mentors colleagues on AI-assisted design and builds reusable accelerators that benefit the wider practice.",
-    role: "Associate Manager, People Lead",
   },
   {
     quote:
       "Nilay takes strong ownership, supports his teammates whenever challenges arise, and was among the first on the team to earn the Claude Architect certification, showing real commitment to growth.",
+    group: "Senior Manager",
     role: "Senior Manager",
   },
   {
     quote:
-      "He took full ownership of the audit-process work and delivered high-quality results that noticeably improved its presentation and effectiveness. Reliable, creative, and always willing to go the extra mile.",
-    role: "Manager",
+      "He has levelled up his craft with AI-first workflows, embedding AI across research, prototyping, and design systems, and delivering production-ready work across several projects that exceeded the target for AI adoption.",
+    group: "Associate Manager",
+    role: "Associate Manager, People Lead",
+    name: "Bhupesh Varsani",
+  },
+  {
+    quote:
+      "A genuine force in the design community: he mentors colleagues on AI-assisted design and builds reusable accelerators that benefit the wider practice.",
+    group: "Associate Manager",
+    role: "Associate Manager, People Lead",
+    name: "Bhupesh Varsani",
   },
   {
     quote:
       "Nilay brings strong out-of-the-box thinking and a willingness to experiment, consistently offering fresh, innovative perspectives. A dedicated designer who pushes to deliver relevant, impactful solutions.",
+    group: "Associate Manager",
     role: "Associate Manager",
+    name: "Shravani Nitnaware",
+  },
+  {
+    quote:
+      "He took full ownership of the audit-process work and delivered high-quality results that noticeably improved its presentation and effectiveness. Reliable, creative, and always willing to go the extra mile.",
+    group: "Manager",
+    role: "Manager",
   },
   {
     quote:
       "An amazing balance of speed and style. He turns ideas into clean, impactful visuals without missing a beat, and his quick execution lifts the whole team's output.",
+    group: "Design colleague",
     role: "Design colleague",
   },
   {
     quote:
       "Highly prompt with a strong work ethic and a clear grasp of requirements. What stands out most is his curiosity and willingness to explore new ideas and stay current with the latest trends.",
+    group: "Design colleague",
     role: "Design colleague",
   },
   {
     quote:
       "Dedicated, skilled, and dependable, with thoughtful ideas and a positive attitude. One of his strongest qualities is how approachable and generous he is whenever a teammate needs help.",
+    group: "Team colleague",
     role: "Team colleague",
   },
   {
     quote:
       "Professional, creative, and solution-oriented. He approaches challenges with positivity and clarity, making sure the work does not just meet expectations but exceeds them.",
+    group: "Team colleague",
     role: "Team colleague",
   },
 ];
 
+/** Rail order, derived so a group is listed once however many sit under it. */
+export const reviewGroups = reviews.reduce<{ group: string; count: number; first: number }[]>(
+  (acc, r, i) => {
+    const found = acc.find((g) => g.group === r.group);
+    if (found) found.count += 1;
+    else acc.push({ group: r.group, count: 1, first: i });
+    return acc;
+  },
+  [],
+);
 
 /* ── About · Profile ─────────────────────────────────────────────────
    Everything below comes from the CV. This is the credentials view, so

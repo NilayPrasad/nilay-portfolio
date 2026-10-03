@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import { motion, EASE } from "./motion";
 import SectionHead from "./SectionHead";
-import { reviews, reviewsIntro } from "@/lib/site";
+import { reviews, reviewGroups, reviewsIntro } from "@/lib/site";
 
 const DWELL = 7000;
 
@@ -17,8 +17,9 @@ const DWELL = 7000;
  * they cut. Bottom right holds the index and a progress hairline that
  * doubles as the auto-advance timer.
  *
- * Reviewers are identified by position. The names sit in Nilay's own
- * records and are deliberately absent from this repo.
+ * The rail lists each position once. Several people can sit under one,
+ * so the quote keeps advancing through that group before moving on, and
+ * the rail shows how many reviews a position holds.
  */
 export default function Reviews() {
   const [i, setI] = useState(0);
@@ -47,27 +48,45 @@ export default function Reviews() {
         <div className="order-2 col-span-12 lg:order-1 lg:col-span-3">
           <span className="t-meta muted-2 block pb-4">Reviewers</span>
           <ul>
-            {reviews.map((rev, n) => (
-              <li key={`${rev.role}-${n}`} className="rule-b">
-                <button
-                  onClick={() => setI(n)}
-                  className="flex w-full items-center justify-between py-4 text-left"
-                >
-                  <motion.span
-                    className="t-card text-left"
-                    animate={{ opacity: n === i ? 1 : 0.35, x: n === i ? 6 : 0 }}
-                    transition={{ duration: 0.6, ease: EASE }}
+            {reviewGroups.map((g) => {
+              const on = reviews[i].group === g.group;
+              // which of this group's reviews is showing, 1-based
+              const within = on ? i - g.first + 1 : 0;
+              return (
+                <li key={g.group} className="rule-b">
+                  <button
+                    onClick={() => setI(g.first)}
+                    aria-current={on ? "true" : undefined}
+                    className="flex w-full items-center justify-between gap-4 py-4 text-left"
                   >
-                    {rev.role}
-                  </motion.span>
-                  <motion.span
-                    className="block h-px bg-current"
-                    animate={{ width: n === i ? 22 : 8, opacity: n === i ? 1 : 0.4 }}
-                    transition={{ duration: 0.6, ease: EASE }}
-                  />
-                </button>
-              </li>
-            ))}
+                    <motion.span
+                      className="t-card"
+                      animate={{ opacity: on ? 1 : 0.35, x: on ? 6 : 0 }}
+                      transition={{ duration: 0.6, ease: EASE }}
+                    >
+                      {g.group}
+                    </motion.span>
+
+                    <span className="flex shrink-0 items-center gap-3">
+                      {g.count > 1 && (
+                        <motion.span
+                          className="t-meta muted-2"
+                          animate={{ opacity: on ? 1 : 0.4 }}
+                          transition={{ duration: 0.6, ease: EASE }}
+                        >
+                          {on ? `${within}/${g.count}` : g.count}
+                        </motion.span>
+                      )}
+                      <motion.span
+                        className="block h-px bg-current"
+                        animate={{ width: on ? 22 : 8, opacity: on ? 1 : 0.4 }}
+                        transition={{ duration: 0.6, ease: EASE }}
+                      />
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
@@ -89,10 +108,12 @@ export default function Reviews() {
               >
                 <p className="t-lede max-w-3xl">{r.quote}</p>
 
-                {/* No portrait: the reviewers are not named here, and a
-                    stock face standing in for a real person would be a lie. */}
+                {/* Named where the attribution is certain. Where it is not,
+                    the role stands alone rather than crediting a quote to
+                    someone who may not have written it. */}
                 <footer className="mt-8">
-                  <span className="t-row block">{r.role}</span>
+                  <span className="t-row block">{r.name ?? r.role}</span>
+                  {r.name && <span className="t-meta muted-2 mt-2 block">{r.role}</span>}
                 </footer>
               </motion.blockquote>
             </AnimatePresence>
