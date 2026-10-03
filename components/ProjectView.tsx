@@ -208,7 +208,9 @@ function FullCase({
       {/* ── Groundwork, three across ───────────────────────────────── */}
       {cards.length > 0 && (
         <section className="shell mt-20 md:mt-28">
-          <div className="grid12 gap-y-6">
+          {/* items-start so each card ends where its content does. Forced to
+              equal height, the shortest block sat in a half-empty frame. */}
+          <div className="grid12 items-start gap-y-6">
             {cards.map((block, i) => (
               <Reveal
                 key={block.n}
@@ -216,7 +218,7 @@ function FullCase({
                 y={20}
                 className="col-span-12 md:col-span-6 lg:col-span-4"
               >
-                <div className="hairline flex h-full flex-col p-7 md:p-8">
+                <div className="hairline flex flex-col p-7 md:p-8">
                   <div className="flex items-start justify-between">
                     <span className="text-[color:var(--fg)] opacity-70">
                       <BlockIcon label={block.label} />

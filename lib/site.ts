@@ -161,6 +161,11 @@ export const method = [
 export const reviewsIntro =
   "Feedback from leads, managers, and the people I work with.";
 
+/** The same reviews named where to push next. Worth carrying, because a
+ *  wall of praise reads as a wall of praise. */
+export const reviewsGrowth =
+  "The same reviews named where to push next: take greater end-to-end ownership, pre-empt issues earlier, and put the visual-design work in front of people more often.";
+
 export type Review = { quote: string; group: string; role: string; name: string };
 
 export const reviews: Review[] = [

@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence } from "motion/react";
-import { motion, EASE } from "./motion";
+import { motion, Reveal, EASE } from "./motion";
 import SectionHead from "./SectionHead";
-import { reviews, reviewGroups, reviewsIntro } from "@/lib/site";
+import { reviews, reviewGroups, reviewsIntro, reviewsGrowth } from "@/lib/site";
 
 const DWELL = 7000;
 
@@ -115,6 +115,13 @@ export default function Reviews() {
               </motion.blockquote>
             </AnimatePresence>
           </div>
+
+          {/* What the same reviewers said to work on. */}
+          <Reveal delay={0.1} className="mt-12">
+            <p className="t-body muted-2 max-w-2xl border-t border-[color:var(--line)] pt-6">
+              {reviewsGrowth}
+            </p>
+          </Reveal>
 
           {/* Index + progress hairline. */}
           <div className="mt-10 flex items-center justify-end gap-4">
