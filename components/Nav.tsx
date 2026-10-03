@@ -86,7 +86,7 @@ export default function Nav() {
       {!open && (
         <motion.div
           aria-hidden
-          className="pointer-events-none fixed inset-x-0 top-0 z-[55] h-32 backdrop-blur-xl"
+          className="safe-t pointer-events-none fixed inset-x-0 top-0 z-[55] h-32 box-content backdrop-blur-xl"
           animate={{ y: hidden ? "-110%" : "0%" }}
           transition={{ duration: 0.6, ease: EASE }}
           style={{
@@ -103,7 +103,7 @@ export default function Nav() {
         transition={{ duration: 0.6, ease: EASE }}
         style={{ opacity: open ? 1 : navOpacity, pointerEvents: open ? "auto" : navPointer }}
       >
-        <div className="relative h-24 text-white">
+        <div className="safe-t relative h-24 box-content text-white">
           <Link
             href="/"
             aria-label={`${site.fullName}, home`}
@@ -167,7 +167,7 @@ export default function Nav() {
             </div>
 
             <motion.div
-              className="shell flex flex-wrap items-end justify-between gap-6 pb-8"
+              className="safe-b shell flex flex-wrap items-end justify-between gap-6 pb-8"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.55, duration: 0.8, ease: EASE }}

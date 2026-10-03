@@ -22,7 +22,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer ref={ref} className="relative h-[100dvh] overflow-hidden bg-black text-white">
+    <footer ref={ref} className="safe-b relative h-[100dvh] overflow-hidden bg-black text-white">
       <ShaderField opacity={0.5} />
       <div className="absolute inset-0 bg-black/55" />
 

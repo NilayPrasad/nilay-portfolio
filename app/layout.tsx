@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fragment_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -12,6 +12,16 @@ const mono = Fragment_Mono({
   variable: "--font-fragment-mono",
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // The design is full bleed, so the field should run under the Dynamic
+  // Island rather than sitting inside a letterbox. Everything near an edge
+  // clears the insets explicitly via .safe-t / .safe-b and .shell.
+  viewportFit: "cover",
+  themeColor: "#000000",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nnp.design"),

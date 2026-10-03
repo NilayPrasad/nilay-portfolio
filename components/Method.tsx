@@ -83,7 +83,7 @@ export default function Method() {
         aria-label="Method"
         className="on-light relative hidden h-[620svh] md:block"
       >
-        <div className="sticky top-0 h-[100svh] overflow-hidden">
+        <div className="sticky top-0 h-[100dvh] overflow-hidden">
           <motion.div
             className="flex h-full"
             style={{ x, width: `${TOTAL * 100}vw`, willChange: "transform" }}
@@ -94,7 +94,7 @@ export default function Method() {
           </motion.div>
 
           {/* Progress only. The number and the name are on the panel. */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20">
+          <div className="safe-b pointer-events-none absolute inset-x-0 bottom-0 z-20">
             <div className="shell pb-10">
               <span className="relative block h-px w-full bg-black/15">
                 <motion.span

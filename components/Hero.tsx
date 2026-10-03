@@ -49,7 +49,7 @@ export default function Hero() {
 
   return (
     <section ref={ref} className="relative h-[320svh]">
-      <div className="sticky top-0 h-[100svh] w-full overflow-hidden bg-black">
+      <div className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-black">
         <ShaderField />
         <div className="absolute inset-0 bg-black/45" />
 
@@ -95,9 +95,11 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* ── Black block: 66vh, content vertically centred ──────── */}
+        {/* Black block: 66% of the pinned frame, not 66vh. The frame is sized
+            in dvh so it always covers the visible viewport; a vh-based child
+            would drift out of step with it as the iOS bar collapses. */}
         <motion.div
-          className="absolute inset-x-0 top-0 z-20 h-[66svh] bg-black"
+          className="absolute inset-x-0 top-0 z-20 h-[66%] bg-black"
           style={{ y: blockY }}
         >
           <div className="absolute bottom-0 left-1/4 top-0 w-px bg-white/14" />
@@ -132,10 +134,10 @@ export default function Hero() {
 function HeroStatic() {
   return (
     <section className="relative">
-      <div className="relative h-[100svh] overflow-hidden bg-black">
+      <div className="relative h-[100dvh] overflow-hidden bg-black">
         <ShaderField />
         <div className="absolute bottom-0 left-1/4 top-0 z-[15] w-px bg-white/14" />
-        <div className="relative z-20 flex h-[66svh] flex-col justify-center bg-black">
+        <div className="relative z-20 flex h-[66%] flex-col justify-center bg-black">
           <div className="absolute bottom-0 left-1/4 top-0 w-px bg-white/14" />
           <div className="hero-gutter">
             <FitText as="h1" className="font-medium text-white">
@@ -152,7 +154,7 @@ function HeroStatic() {
         </div>
       </div>
 
-      <div className="relative h-[100svh] overflow-hidden bg-black text-white">
+      <div className="relative h-[100dvh] overflow-hidden bg-black text-white">
         <ShaderField />
         <div className="absolute inset-0 bg-black/45" />
         <div className="absolute bottom-0 left-1/4 top-0 w-px bg-white/14" />

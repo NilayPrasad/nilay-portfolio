@@ -122,9 +122,17 @@ html.lenis, html.lenis body { height: auto; }
   .shell {
     width: 100%;
     margin-inline: auto;
-    padding-inline: var(--gutter);
+    /* max() rather than addition: the inset only bites in landscape on a
+       notched phone, and it must not stack on top of the gutter in portrait. */
+    padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
     max-width: calc(var(--maxw) + 2 * var(--gutter));
   }
+
+  /* Clear the Dynamic Island, the home indicator, and Safari's floating
+     bottom bar on iOS 26. These resolve to 0 anywhere without insets. */
+  .safe-t { padding-top: env(safe-area-inset-top, 0px); }
+  .safe-b { padding-bottom: env(safe-area-inset-bottom, 0px); }
 
   .grid12 {
     display: grid;
