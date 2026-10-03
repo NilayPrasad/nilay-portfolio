@@ -278,34 +278,34 @@ export const experience = [
     org: "Accenture · RDE",
     role: "UX / UI Designer, Analyst (L11)",
     year: "Sep 2024 to Present",
+    phase: "Enterprise & AI",
+    note: "Agentic AI became the core of the work, and through 2025 content framing and master prompts moved to the centre of the practice.",
     body: "Reinvention Design Engineers (RDE), ServiceNow Business Group, India. Concept to production design across enterprise agentic-AI platforms: multi-agent pipelines, AI copilots, master-prompt systems, and design systems documented for engineering handoff.",
   },
   {
     org: "Soncur",
     role: "UX & Graphic Designer (Intern)",
     year: "Jul to Oct 2023",
+    phase: "Systems & Brand",
+    note: "Writing before designing.",
     body: "A sound-to-jewellery app: wireframes, information architecture, a UX audit, and brand guidelines.",
   },
   {
     org: "Extentia",
     role: "UX Designer (Intern)",
     year: "May to Aug 2021",
+    phase: "Into UX",
+    note: "My first UX internship, and the first time I worked to someone else's deadline.",
     body: "An AI travel platform for an Australian client that plans and books personalised itineraries. Worked to real client deadlines.",
   },
   {
     org: "Prime Rabbit",
     role: "Visual Designer (Intern)",
     year: "Jul to Oct 2020",
+    phase: "First Work",
+    note: "My first paid work. The brief is never the problem statement.",
     body: "Social and brand-promotion design, Instagram content and campaigns, working alongside content writers.",
   },
-];
-
-export const timeline = [
-  { year: "2020", title: "First Work", body: "First paid visual-design work at Prime Rabbit. The brief is never the problem statement." },
-  { year: "2021", title: "Into UX", body: "First UX internship at Extentia, working with real clients and real deadlines." },
-  { year: "2023", title: "Systems & Brand", body: "UX and graphic design with brand guidelines at Soncur. Writing before designing." },
-  { year: "2024", title: "Enterprise & AI", body: "Joined the Reinvention Design Engineers practice. Agentic AI became the core of the work." },
-  { year: "2025", title: "AI as a Medium", body: "Content framing and master prompts became the centre of the practice." },
 ];
 
 export const awards = [

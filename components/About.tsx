@@ -20,7 +20,6 @@ import {
   profile,
   aboutStats,
   experience,
-  timeline,
   awards,
   certifications,
   education,
@@ -30,7 +29,7 @@ import {
 /**
  * The about page is the credentials view, so it is the one surface where
  * real employer and client names appear. Case studies stay white-labelled.
- * Order follows the CV: profile, experience, timeline, how the practice
+ * Order follows the CV: profile, experience, how the practice
  * works, recognition, certifications, education, capabilities.
  */
 export default function About() {
@@ -125,79 +124,56 @@ function Profile() {
   );
 }
 
-/* ── 02 / Experience — the CV proper, real names ─────────────────────── */
+/* ── 02 / Experience — the CV proper, real names ─────────────────────
+   Timeline used to sit below this as its own section, but every beat on
+   it belonged to one of these roles. Merged: the beat's name sits with
+   the role, its reflection closes the entry, and the drawn rule that
+   made the timeline read as a timeline now runs down this list. */
 function Experience() {
-  return (
-    <section className="shell">
-      <RuleDraw />
-      <h2 className="t-meta mt-4 block">Experience</h2>
-
-      <ul className="mt-10">
-        {experience.map((role, n) => (
-          <li key={role.org}>
-            <Reveal delay={n * 0.05} y={20}>
-              <div className="tick-rule grid12 gap-y-3 py-9">
-                {/* The company carries the emphasis here, not the title:
-                    on a CV view the reader scans for where, then what. */}
-                <div className="col-span-12 lg:col-span-5">
-                  <h3 className="t-row">
-                    <SplitText stagger={0.012}>{role.org}</SplitText>
-                  </h3>
-                  <span className="t-meta mt-3 block">{role.role}</span>
-                </div>
-
-                <p className="t-body col-span-12 max-w-xl lg:col-span-5 lg:col-start-6">
-                  {role.body}
-                </p>
-
-                <span className="t-meta col-span-12 lg:col-span-2 lg:justify-self-end">
-                  {role.year}
-                </span>
-              </div>
-            </Reveal>
-          </li>
-        ))}
-      </ul>
-
-      <Timeline />
-    </section>
-  );
-}
-
-function Timeline() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 80%", "end 60%"] });
   const line = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <div ref={ref} className="relative mt-24 md:mt-32">
+    <section className="shell">
       <RuleDraw />
-      <h2 className="t-meta mt-4 block">Timeline</h2>
+      <h2 className="t-meta mt-4 block">Experience</h2>
 
-      <motion.div
-        className="absolute left-0 top-20 hidden w-px origin-top bg-current opacity-20 lg:block"
-        style={{ height: "calc(100% - 5rem)", scaleY: line }}
-        aria-hidden
-      />
+      <div ref={ref} className="relative mt-10">
+        <motion.div
+          className="absolute left-0 top-6 hidden w-px origin-top bg-current opacity-20 lg:block"
+          style={{ height: "calc(100% - 3rem)", scaleY: line }}
+          aria-hidden
+        />
 
-      <ul className="mt-10 lg:pl-10">
-        {timeline.map((t, n) => (
-          <li key={t.year}>
-            <Reveal delay={n * 0.05} y={20}>
-              <div className="tick-rule grid12 items-baseline gap-y-3 py-7">
-                <span className="t-lede col-span-3 lg:col-span-2">{t.year}</span>
-                <span className="t-row col-span-9 lg:col-span-4">
-                  <SplitText stagger={0.014}>{t.title}</SplitText>
-                </span>
-                <p className="t-body col-span-12 max-w-lg lg:col-span-5 lg:col-start-8">
-                  {t.body}
-                </p>
-              </div>
-            </Reveal>
-          </li>
-        ))}
-      </ul>
-    </div>
+        <ul className="lg:pl-10">
+          {experience.map((role, n) => (
+            <li key={role.org}>
+              <Reveal delay={n * 0.05} y={20}>
+                <div className="tick-rule grid12 gap-y-4 py-9">
+                  <div className="col-span-12 lg:col-span-4">
+                    <h3 className="t-row">
+                      <SplitText stagger={0.012}>{role.org}</SplitText>
+                    </h3>
+                    <span className="t-meta mt-3 block">{role.role}</span>
+                    <span className="t-meta muted-2 mt-1.5 block">{role.phase}</span>
+                  </div>
+
+                  <div className="col-span-12 lg:col-span-6 lg:col-start-5">
+                    <p className="t-body m-0 max-w-xl">{role.body}</p>
+                    <p className="t-body muted-2 m-0 mt-4 max-w-xl">{role.note}</p>
+                  </div>
+
+                  <span className="t-meta muted-2 col-span-12 lg:col-span-2 lg:justify-self-end">
+                    {role.year}
+                  </span>
+                </div>
+              </Reveal>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }
 
