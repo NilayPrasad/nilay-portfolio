@@ -262,7 +262,7 @@ export const profile = {
     "I've moved from AI-assisted designer to architecting agentic experiences, multi-agent pipelines, AI copilots, and master-prompt systems embedded directly in client work. I approach a prompt the way I approach an interface: a designed surface with states, failure modes, and an intended reading order.",
   ],
   /** Give this a `src` and the portrait replaces the labelled slot. */
-  photo: { label: "Portrait", src: "" },
+  photo: { label: "Nilay Prasad", src: "/portrait.jpg" },
 };
 
 export const aboutStats = [
