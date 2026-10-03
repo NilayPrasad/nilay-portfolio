@@ -1,120 +1,103 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence } from "motion/react";
-import { motion, EASE } from "./motion";
+import { motion, Reveal, EASE } from "./motion";
 import SectionHead from "./SectionHead";
-import { reviews, img } from "@/lib/site";
-
-const DWELL = 7000;
+import { Plus } from "./Monogram";
+import { reviews, reviewsIntro, reviewsLead } from "@/lib/site";
 
 /**
- * 06 / Reviews — §4.8.
+ * 06 / Reviews.
  *
- * Left rail stacks the client names with hairline separators and marks
- * the active one. Right carries the pull-quote, which leaves upward and
- * arrives from below through the same mask, so the two never cross-fade
- * — they cut. Bottom right holds the index and a progress hairline that
- * doubles as the auto-advance timer.
+ * Real feedback, attributed by role rather than by name. A two-up grid of
+ * quotes on a hairline, stacking to one column on small screens. Only the
+ * first few show at rest, because eleven at once reads as a wall and the
+ * section is meant to be scanned, not waded through.
  */
 export default function Reviews() {
-  const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const r = reviews[i];
-
-  useEffect(() => {
-    if (paused) return;
-    const id = setTimeout(() => setI((v) => (v + 1) % reviews.length), DWELL);
-    return () => clearTimeout(id);
-  }, [i, paused]);
+  const [open, setOpen] = useState(false);
+  const rest = reviews.length - reviewsLead;
 
   return (
-    <section
-      className="section shell"
-      onPointerEnter={() => setPaused(true)}
-      onPointerLeave={() => setPaused(false)}
-    >
-      <SectionHead label="Reviews" />
+    <section className="section shell">
+      <SectionHead label="Reviews" intro={reviewsIntro} />
 
-      <div className="grid12 mt-16 gap-y-12 md:mt-24">
-        {/* ── Client rail ─────────────────────────────────────────── */}
-        <div className="col-span-12 lg:col-span-3">
-          <span className="t-meta muted-2 block pb-4">Clients</span>
-          <ul>
-            {reviews.map((rev, n) => (
-              <li key={rev.client} className="rule-b">
-                <button
-                  onClick={() => setI(n)}
-                  className="flex w-full items-center justify-between py-4 text-left"
-                >
-                  <motion.span
-                    className="t-row"
-                    animate={{ opacity: n === i ? 1 : 0.35, x: n === i ? 6 : 0 }}
-                    transition={{ duration: 0.6, ease: EASE }}
-                  >
-                    {rev.client}
-                  </motion.span>
-                  <motion.span
-                    className="block h-px bg-current"
-                    animate={{ width: n === i ? 22 : 8, opacity: n === i ? 1 : 0.4 }}
-                    transition={{ duration: 0.6, ease: EASE }}
-                  />
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* ── Quote ───────────────────────────────────────────────── */}
-        <div className="rail col-span-12 lg:col-span-8 lg:col-start-5 lg:pl-10">
-          <span className="t-section block leading-none" aria-hidden>
-            &ldquo;
-          </span>
-
-          <div className="relative min-h-[16rem] md:min-h-[14rem]">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.blockquote
-                key={r.name}
-                className="m-0"
-                initial={{ clipPath: "inset(0 0 100% 0)", y: 28 }}
-                animate={{ clipPath: "inset(0 0 0% 0)", y: 0 }}
-                exit={{ clipPath: "inset(100% 0 0 0)", y: -28 }}
-                transition={{ duration: 0.7, ease: EASE }}
-              >
-                <p className="t-lede max-w-3xl">{r.quote}</p>
-
-                <footer className="mt-8 flex items-center gap-4">
-                  <span className="media h-11 w-11 shrink-0 rounded-full">
-                    <img src={img(r.seed, 200, 200)} alt="" />
-                  </span>
-                  <span>
-                    <span className="t-row block">{r.name}</span>
-                    <span className="t-meta muted-2 mt-1 block">
-                      {r.role}, {r.client}
-                    </span>
-                  </span>
-                </footer>
-              </motion.blockquote>
-            </AnimatePresence>
-          </div>
-
-          {/* Index + progress hairline. */}
-          <div className="mt-10 flex items-center justify-end gap-4">
-            <span className="t-meta">
-              {String(i + 1).padStart(2, "0")} &ndash; {String(reviews.length).padStart(2, "0")}
-            </span>
-            <div className="h-px w-28 overflow-hidden bg-current opacity-25">
-              <motion.div
-                key={`${i}-${paused}`}
-                className="h-px w-full origin-left bg-current"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: paused ? 0.001 : 1 }}
-                transition={{ duration: paused ? 0 : DWELL / 1000, ease: "linear" }}
-              />
-            </div>
-          </div>
-        </div>
+      {/* SectionHead already contributes its own top padding, and with no
+          title filling the left column the usual mt-16/mt-24 left a hole. */}
+      <div className="grid12 mt-8 gap-y-10 md:mt-12">
+        {reviews.slice(0, reviewsLead).map((r, i) => (
+          <Quote key={r.quote} quote={r.quote} role={r.role} index={i} delay={i * 0.05} />
+        ))}
       </div>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="rest"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.7, ease: EASE }}
+            className="overflow-hidden"
+          >
+            <div className="grid12 gap-y-10 pt-10">
+              {reviews.slice(reviewsLead).map((r, i) => (
+                <Quote
+                  key={r.quote}
+                  quote={r.quote}
+                  role={r.role}
+                  index={reviewsLead + i}
+                  delay={i * 0.04}
+                />
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {rest > 0 && (
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          className="pill t-meta mt-14 inline-flex items-center"
+        >
+          {open ? "Show fewer" : `Read ${rest} more`}
+          <motion.span
+            aria-hidden
+            animate={{ rotate: open ? 135 : 0 }}
+            transition={{ duration: 0.5, ease: EASE }}
+            className="ml-3 inline-flex"
+          >
+            <Plus size={10} />
+          </motion.span>
+        </button>
+      )}
     </section>
+  );
+}
+
+function Quote({
+  quote,
+  role,
+  index,
+  delay,
+}: {
+  quote: string;
+  role: string;
+  index: number;
+  delay: number;
+}) {
+  return (
+    <Reveal delay={delay} y={18} className="col-span-12 md:col-span-6 lg:col-span-5 lg:even:col-start-8">
+      <figure className="rule m-0 flex h-full flex-col pt-5">
+        <span className="t-meta muted-2">{String(index + 1).padStart(2, "0")}</span>
+        <blockquote className="m-0 mt-5">
+          <p className="t-body m-0 max-w-xl text-[color:var(--fg)]">{quote}</p>
+        </blockquote>
+        <figcaption className="t-meta muted-2 mt-6">{role}</figcaption>
+      </figure>
+    </Reveal>
   );
 }
