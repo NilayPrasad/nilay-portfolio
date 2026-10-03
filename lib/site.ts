@@ -157,14 +157,11 @@ export const method = [
 /* ── 06 / Reviews ────────────────────────────────────────────────────
    Grouped by position. `group` drives the rail, `role` is the exact title
    shown with the quote, and several people can sit under one group.
-
-   `name` is only filled where the attribution is unambiguous. Where it is
-   blank the quote shows the role alone rather than guessing which of two
-   people said which thing. */
+   Attribution is confirmed, so every quote carries a name. */
 export const reviewsIntro =
   "Feedback from leads, managers, and the people I work with.";
 
-export type Review = { quote: string; group: string; role: string; name?: string };
+export type Review = { quote: string; group: string; role: string; name: string };
 
 export const reviews: Review[] = [
   {
@@ -176,15 +173,17 @@ export const reviews: Review[] = [
   },
   {
     quote:
-      "Strong, consistent design quality and a thorough grasp of requirements, keeping user needs and business goals aligned. His investigative approach and energy in brainstorms lift the whole team.",
-    group: "Senior Manager",
-    role: "Senior Manager",
-  },
-  {
-    quote:
       "Nilay takes strong ownership, supports his teammates whenever challenges arise, and was among the first on the team to earn the Claude Architect certification, showing real commitment to growth.",
     group: "Senior Manager",
     role: "Senior Manager",
+    name: "Sumeet Bhat",
+  },
+  {
+    quote:
+      "He took full ownership of the audit-process work and delivered high-quality results that noticeably improved its presentation and effectiveness. Reliable, creative, and always willing to go the extra mile.",
+    group: "Manager",
+    role: "Manager",
+    name: "Bhavana Roy",
   },
   {
     quote:
@@ -209,33 +208,38 @@ export const reviews: Review[] = [
   },
   {
     quote:
-      "He took full ownership of the audit-process work and delivered high-quality results that noticeably improved its presentation and effectiveness. Reliable, creative, and always willing to go the extra mile.",
-    group: "Manager",
-    role: "Manager",
-  },
-  {
-    quote:
-      "An amazing balance of speed and style. He turns ideas into clean, impactful visuals without missing a beat, and his quick execution lifts the whole team's output.",
-    group: "Design colleague",
-    role: "Design colleague",
+      "Nilay thinks clearly and generates strong, effective ideas. His quick turnaround and the quality of his deliverables are highly appreciated, and he brings clear value to the team.",
+    group: "Colleague",
+    role: "Colleague",
+    name: "Sathya Samidurai",
   },
   {
     quote:
       "Highly prompt with a strong work ethic and a clear grasp of requirements. What stands out most is his curiosity and willingness to explore new ideas and stay current with the latest trends.",
-    group: "Design colleague",
-    role: "Design colleague",
+    group: "Colleague",
+    role: "Colleague",
+    name: "Mitali Kalyankar",
+  },
+  {
+    quote:
+      "An amazing balance of speed and style. He turns ideas into clean, impactful visuals without missing a beat, and his quick execution lifts the whole team's output.",
+    group: "Colleague",
+    role: "Colleague",
+    name: "Arunima Sarkar",
   },
   {
     quote:
       "Dedicated, skilled, and dependable, with thoughtful ideas and a positive attitude. One of his strongest qualities is how approachable and generous he is whenever a teammate needs help.",
-    group: "Team colleague",
-    role: "Team colleague",
+    group: "Colleague",
+    role: "Colleague",
+    name: "Vanshika Manghani",
   },
   {
     quote:
       "Professional, creative, and solution-oriented. He approaches challenges with positivity and clarity, making sure the work does not just meet expectations but exceeds them.",
-    group: "Team colleague",
-    role: "Team colleague",
+    group: "Colleague",
+    role: "Colleague",
+    name: "Vandana Aswani",
   },
 ];
 

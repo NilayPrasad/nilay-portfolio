@@ -108,12 +108,9 @@ export default function Reviews() {
               >
                 <p className="t-lede max-w-3xl">{r.quote}</p>
 
-                {/* Named where the attribution is certain. Where it is not,
-                    the role stands alone rather than crediting a quote to
-                    someone who may not have written it. */}
                 <footer className="mt-8">
-                  <span className="t-row block">{r.name ?? r.role}</span>
-                  {r.name && <span className="t-meta muted-2 mt-2 block">{r.role}</span>}
+                  <span className="t-row block">{r.name}</span>
+                  <span className="t-meta muted-2 mt-2 block">{r.role}</span>
                 </footer>
               </motion.blockquote>
             </AnimatePresence>
