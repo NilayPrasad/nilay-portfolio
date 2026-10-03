@@ -226,8 +226,10 @@ function FullCase({
 
                   <h2 className="t-sub mt-8">{block.label}</h2>
 
+                  {block.keys && <Keys items={block.keys} className="mt-5" />}
+
                   {block.body?.map((para, n) => (
-                    <p key={n} className="t-body mt-3 first:mt-4">
+                    <p key={n} className="t-body mt-3 first:mt-5">
                       {para}
                     </p>
                   ))}
@@ -281,6 +283,8 @@ function Statement({ block }: { block: ProjectBlock }) {
           </div>
 
           <div className="col-span-12 lg:col-span-7 lg:col-start-6">
+            {block.keys && <Keys items={block.keys} className="mb-7" />}
+
             {block.body?.map((para, n) => (
               <p key={n} className="t-body mb-4 max-w-2xl last:mb-0">
                 {para}
@@ -371,6 +375,24 @@ function Gallery({ project, className = "" }: { project: Project; className?: st
   );
 }
 
+/* ── The scannable take-outs for a block ──────────────────────────────
+   Sits above the prose so the point lands without reading it. Mono on a
+   hairline, square to match the card frames rather than the pill. */
+function Keys({ items, className = "" }: { items: string[]; className?: string }) {
+  return (
+    <ul className={`flex flex-wrap gap-2 ${className}`}>
+      {items.map((k) => (
+        <li
+          key={k}
+          className="t-meta border border-[color:var(--line)] px-3 py-2 text-[color:var(--fg)]"
+        >
+          {k}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 /* ── Shared blocks ────────────────────────────────────────────────── */
 function FeatureGrid({ label, items }: { label?: string; items: string[] }) {
   return (
@@ -389,18 +411,18 @@ function FeatureGrid({ label, items }: { label?: string; items: string[] }) {
 }
 
 
+/** Sits inside Project details rather than banding the page on its own. */
 function Personas({ label, items }: { label: string; items: string[] }) {
   return (
-    <section className="shell py-16 md:py-24">
-      <RuleDraw />
-      <span className="t-meta mt-4 block">{label}</span>
-      <div className="mt-8 flex flex-wrap gap-2.5">
+    <div className="mt-12 border-t border-[color:var(--line)] pt-8">
+      <span className="t-meta muted-2 block">{label}</span>
+      <div className="mt-5 flex flex-wrap gap-2.5">
         {items.map((p) => (
           <span key={p} className="pill t-meta">
             {p}
           </span>
         ))}
       </div>
-    </section>
+    </div>
   );
 }

@@ -16,6 +16,9 @@ export type ProjectBlock = {
   body?: string[];
   /** Rendered as a plus-marked list under the block copy. */
   items?: string[];
+  /** The scannable take-outs: the two to four facts worth carrying away
+   *  without reading the prose underneath. Rendered above it. */
+  keys?: string[];
 };
 
 export type Slot = {
@@ -79,6 +82,11 @@ export const projects: Project[] = [
       {
         n: "01",
         label: "Research",
+        keys: [
+          "Point solutions, no shared taxonomy",
+          "Every exception bounced to a human",
+          "Personas defined per process area",
+        ],
         body: [
           "The previous generation was point solutions: largely RPA and workflow, with bespoke AI assets, loose data capture, and no common process taxonomy. Every exception bounced back to a human.",
           "Stakeholder interviews, workflow mapping, and data-flow analysis surfaced the bottlenecks. Personas were defined per process area and a shared success matrix agreed.",
@@ -87,6 +95,11 @@ export const projects: Project[] = [
       {
         n: "02",
         label: "Ideation",
+        keys: [
+          "Agentic engine, not workflow",
+          "Transparency, control, and trust",
+          "One interface language end to end",
+        ],
         body: [
           "Problem statement: how might we evolve the platform into an agentic AI engine that proactively orchestrates end-to-end processes with transparency, control, and trust?",
           "Explored agent behaviours, cross-process collaboration, and a single interface language across Discover, Define, Design, Develop, and Deliver.",
@@ -95,6 +108,10 @@ export const projects: Project[] = [
       {
         n: "03",
         label: "Feature system",
+        keys: [
+          "Seven capabilities",
+          "One per layer of orchestration",
+        ],
         body: [
           "Seven capabilities, each addressing a different layer of the orchestration problem.",
         ],
@@ -102,6 +119,12 @@ export const projects: Project[] = [
       {
         n: "04",
         label: "How it was solved",
+        keys: [
+          "30+ apps unified into one ecosystem",
+          "Agents handle routine decisions",
+          "Exceptions escalate to a human",
+          "Design system documented for handoff",
+        ],
         body: [
           "Unified 30+ apps into one ecosystem. Agents handle routine decisions and escalate exceptions to a human companion.",
           "A glassmorphic design system (violet-led palette, full component library) documented for handoff, with a structured review-and-feedback loop.",
@@ -194,6 +217,11 @@ export const projects: Project[] = [
       {
         n: "01",
         label: "Research",
+        keys: [
+          "Workforce out of step with demand",
+          "Forecasting split across systems",
+          "Four personas mapped end to end",
+        ],
         body: [
           "Organizations struggle to align the workforce with fast-changing needs. Forecasting demand and matching internal and external talent is slow, causing skill gaps and costly recruitment.",
           "Stakeholder interviews, a design hackathon, workflow mapping, and demand–supply data-flow analysis. Four personas were defined, with end-to-end journeys mapped for each.",
@@ -202,6 +230,11 @@ export const projects: Project[] = [
       {
         n: "02",
         label: "Ideation",
+        keys: [
+          "Demand and supply read in real time",
+          "Surge alerts and overdue tracking",
+          "Gap forecasting prioritised",
+        ],
         body: [
           "An agentic AI layer that assesses demand and supply in real time.",
           "Brainstormed features, wireframes, and journeys; prioritized surge alerts, overdue tracking, and gap forecasting; defined a clear module navigation.",
@@ -210,11 +243,21 @@ export const projects: Project[] = [
       {
         n: "03",
         label: "Feature system",
+        keys: [
+          "Four capabilities",
+          "Planning, execution, foresight, transparency",
+        ],
         body: ["Four capabilities spanning planning, execution, foresight, and transparency."],
       },
       {
         n: "04",
         label: "How it was solved",
+        keys: [
+          "Four-hub information architecture",
+          "GenAI across every module",
+          "Predictive alerts and an assistant",
+          "Reactive planning turned proactive",
+        ],
         body: [
           "A four-hub information architecture: Cognitive Command Centre, Manage Demand, Manage Supply, and a summary dashboard, with GenAI across modules.",
           "Predictive alerts and an assistant shift planning from reactive to proactive. The glassmorphic design language was documented for handoff.",
@@ -304,6 +347,11 @@ export const projects: Project[] = [
       {
         n: "01",
         label: "Research",
+        keys: [
+          "Enquiries routed through manager to rep",
+          "Three competitor dealerships benchmarked",
+          "UX audit across five dimensions",
+        ],
         body: [
           "Most manufacturers run enquiry management through a CRM website and app, routing enquiries from dealer manager to sales rep to admin, and tagging them hot, warm, or cold.",
           "Benchmarked the walk-in experience at three competitor dealerships — tablet, paper, and desktop respectively. Interviewed sales executives: behaviour is offline-first, follow-up is valued most, and usage varies sharply by point in the journey.",
@@ -313,6 +361,11 @@ export const projects: Project[] = [
       {
         n: "02",
         label: "Ideation",
+        keys: [
+          "Guided walkthrough for training",
+          "Enquiry capture cut to minimal details",
+          "Catalogue and side-by-side compare",
+        ],
         items: [
           "Improve training with a guided walkthrough",
           "Smart enquiry creation, prioritized by customer type and temperature",
@@ -325,11 +378,21 @@ export const projects: Project[] = [
       {
         n: "03",
         label: "Feature system",
+        keys: [
+          "Five capabilities",
+          "Walk-in through to follow-up",
+        ],
         body: ["Five capabilities covering the lead from first walk-in to follow-up."],
       },
       {
         n: "04",
         label: "How it was solved",
+        keys: [
+          "Dual-persona app",
+          "Sales CRM to run the day",
+          "Walk-in showcase mode for customers",
+          "Dark, high-contrast for a tablet",
+        ],
         body: [
           "A dual-persona app. A Sales Executive dashboard and CRM to run the day (sales analysis, test drives, revenue, funnel, demographics), plus a Customer Walk-In showcase mode: compare vehicles, specs and colour, interactive feature identification, then capture the enquiry.",
           "A dark, high-contrast system tuned for a dealership tablet.",
@@ -414,6 +477,11 @@ export const projects: Project[] = [
       {
         n: "01",
         label: "The brief",
+        keys: [
+          "650+ CXOs a year, one session each",
+          "No slides, presenter driven",
+          "Deep dives that return to the spine",
+        ],
         body: [
           "650+ CXOs visit each year, and the pitch has to land in one session. The story is huge: global headcount, a fifteen-city India footprint, twenty-plus years of delivery evolution, five pillars, and client proof.",
           "Turn it into one guided experience a presenter drives live — no slides — diving deep where a given executive cares, then returning cleanly.",
@@ -422,6 +490,11 @@ export const projects: Project[] = [
       {
         n: "02",
         label: "Experience structure",
+        keys: [
+          "Personalised, client-branded welcome",
+          "Three modes: overview, journey, cases",
+          "Five pillars inside the journey",
+        ],
         body: [
           "Opens on a personalized welcome that greets the executives by name, branded to their company, with all systems active and agents ready.",
           "Three modes: Overview — a global globe, India map, differentiators, and the reinvention journey. Journey — five pillars, each a 3D world. Case Studies — a spin-to-explore function wheel leading to client proof.",
@@ -430,6 +503,10 @@ export const projects: Project[] = [
       {
         n: "03",
         label: "The story it puts in the room",
+        keys: [
+          "Four figures carry the scale",
+          "Each one live and navigable",
+        ],
         body: [
           "Four figures carry the scale of the argument, each rendered as a live, navigable object rather than a bullet.",
         ],
@@ -437,11 +514,20 @@ export const projects: Project[] = [
       {
         n: "04",
         label: "Signature moments",
+        keys: [
+          "Eight moments",
+          "Reachable in any order the room needs",
+        ],
         body: ["Eight moments the presenter can reach for, in any order the room needs."],
       },
       {
         n: "05",
         label: "Motion & 3D craft",
+        keys: [
+          "Generative 3D render per pillar",
+          "Motion specs authored to intent",
+          "Language held across a dozen pivots",
+        ],
         body: [
           "Every pillar carries its own generative 3D render — spheres, an orbital atom, a globe, a function wheel — and transitions run to millisecond-level motion specs.",
           "I authored the motion specs and the agent master prompts so AI could build to intent, holding the language consistent across a dozen pivots. Dark, cinematic canvas; violet and teal accents; glassmorphic cards.",
