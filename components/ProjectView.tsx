@@ -226,11 +226,9 @@ function FullCase({
 
                   <h2 className="t-sub mt-8">{block.label}</h2>
 
-                  {block.keys && <Keys items={block.keys} className="mt-5" />}
-
                   {block.body?.map((para, n) => (
-                    <p key={n} className="t-body mt-3 first:mt-5">
-                      {para}
+                    <p key={n} className="t-body mt-3 first:mt-4">
+                      <Copy text={para} />
                     </p>
                   ))}
 
@@ -283,11 +281,9 @@ function Statement({ block }: { block: ProjectBlock }) {
           </div>
 
           <div className="col-span-12 lg:col-span-7 lg:col-start-6">
-            {block.keys && <Keys items={block.keys} className="mb-7" />}
-
             {block.body?.map((para, n) => (
               <p key={n} className="t-body mb-4 max-w-2xl last:mb-0">
-                {para}
+                <Copy text={para} />
               </p>
             ))}
 
@@ -375,21 +371,23 @@ function Gallery({ project, className = "" }: { project: Project; className?: st
   );
 }
 
-/* ── The scannable take-outs for a block ──────────────────────────────
-   Sits above the prose so the point lands without reading it. Mono on a
-   hairline, square to match the card frames rather than the pill. */
-function Keys({ items, className = "" }: { items: string[]; className?: string }) {
+/* ── Emphasis inside the copy ─────────────────────────────────────────
+   Body strings carry **markers** around the phrases worth catching on a
+   skim. Rendering them in place keeps the fact in its sentence, which a
+   detached chip strip could not do. */
+function Copy({ text }: { text: string }) {
   return (
-    <ul className={`flex flex-wrap gap-2 ${className}`}>
-      {items.map((k) => (
-        <li
-          key={k}
-          className="t-meta border border-[color:var(--line)] px-3 py-2 text-[color:var(--fg)]"
-        >
-          {k}
-        </li>
-      ))}
-    </ul>
+    <>
+      {text.split(/\*\*/).map((part, i) =>
+        i % 2 ? (
+          <strong key={i} className="font-medium text-[color:var(--fg)]">
+            {part}
+          </strong>
+        ) : (
+          part
+        ),
+      )}
+    </>
   );
 }
 
