@@ -104,7 +104,7 @@ export const projects: Project[] = [
         label: "How it was solved",
         body: [
           "Unified 30+ apps into one ecosystem. Agents handle routine decisions and escalate exceptions to a human companion.",
-          "A glassmorphic design system — violet-led palette, full component library — documented for handoff, with a structured review-and-feedback loop.",
+          "A glassmorphic design system (violet-led palette, full component library) documented for handoff, with a structured review-and-feedback loop.",
         ],
       },
       {
@@ -216,7 +216,7 @@ export const projects: Project[] = [
         n: "04",
         label: "How it was solved",
         body: [
-          "A four-hub information architecture — Cognitive Command Centre, Manage Demand, Manage Supply, and a summary dashboard — with GenAI across modules.",
+          "A four-hub information architecture: Cognitive Command Centre, Manage Demand, Manage Supply, and a summary dashboard, with GenAI across modules.",
           "Predictive alerts and an assistant shift planning from reactive to proactive. The glassmorphic design language was documented for handoff.",
         ],
       },
@@ -331,7 +331,7 @@ export const projects: Project[] = [
         n: "04",
         label: "How it was solved",
         body: [
-          "A dual-persona app. A Sales Executive dashboard and CRM to run the day — sales analysis, test drives, revenue, funnel, demographics — plus a Customer Walk-In showcase mode: compare vehicles, specs and colour, interactive feature identification, then capture the enquiry.",
+          "A dual-persona app. A Sales Executive dashboard and CRM to run the day (sales analysis, test drives, revenue, funnel, demographics), plus a Customer Walk-In showcase mode: compare vehicles, specs and colour, interactive feature identification, then capture the enquiry.",
           "A dark, high-contrast system tuned for a dealership tablet.",
         ],
       },

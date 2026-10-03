@@ -135,7 +135,7 @@ function Experience() {
   const line = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <section className="shell">
+    <section className="shell pb-24 md:pb-36">
       <RuleDraw />
       <h2 className="t-meta mt-4 block">Experience</h2>
 

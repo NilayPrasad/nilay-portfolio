@@ -3,27 +3,35 @@
 import Link from "next/link";
 import { SplitText, Reveal, RuleDraw, Counter } from "./motion";
 import MediaSlot from "./MediaSlot";
-import { Plus, Arrow } from "./Monogram";
+import { Plus, Arrow, BlockIcon } from "./Monogram";
 import type { Project, ProjectBlock } from "@/lib/projects";
 
 /**
  * The case-study template. One page per project, driven entirely by the
  * project object, so a new case study is a data edit and nothing else.
  *
- * Order: title and lede, the outcomes up front as a figures band, then
- * the project details, the numbered blocks, and finally every screen.
- * Leading with the result means a reader who stops after ten seconds
- * still leaves with the point.
+ * Order: title and lede, the project details with its personas, then the
+ * groundwork as a three-up card grid, how it was solved, the personal
+ * contribution, and the outcomes. Screens close it out.
+ *
+ * The groundwork blocks sit in cards rather than stacked full-width rows
+ * because they are scanned, not read: three across gives the shape of the
+ * research in one look instead of three screens of scrolling.
  */
 export default function ProjectView({ project, next }: { project: Project; next: Project }) {
   const soon = project.status === "soon";
 
-  // The trailing outcomes block is promoted out of the sequence and
-  // rendered at the top; the rest keep their numbering, which stays
-  // contiguous because it was always the last block.
-  const last = project.blocks[project.blocks.length - 1];
-  const outcomes = !soon && last?.label.startsWith("Outcome") ? last : undefined;
-  const blocks = outcomes ? project.blocks.slice(0, -1) : project.blocks;
+  // Three blocks get their own treatment; whatever is left is groundwork
+  // and goes in the card grid. Matching on label rather than index keeps
+  // this working for project 04, which has a different block sequence.
+  const find = (test: (l: string) => boolean) =>
+    soon ? undefined : project.blocks.find((b) => test(b.label));
+  const outcomes = find((l) => l.startsWith("Outcome"));
+  const solved = find((l) => l === "How it was solved");
+  const contribution = find((l) => l === "My Contribution");
+  const cards = soon
+    ? []
+    : project.blocks.filter((b) => b !== outcomes && b !== solved && b !== contribution);
 
   return (
     <article>
@@ -38,7 +46,10 @@ export default function ProjectView({ project, next }: { project: Project; next:
           </Link>
         </Reveal>
 
-        <h1 className="t-section mt-10 max-w-5xl">
+        {/* Sized and measured to hold the longest title in two lines.
+            t-section's own clamp at a 4xl measure put every three-word
+            title on three lines, one word each. */}
+        <h1 className="t-section mt-10 text-balance text-[clamp(2.1rem,6.4vw,5.6rem)]">
           <SplitText stagger={0.02}>{project.title}</SplitText>
         </h1>
 
@@ -53,10 +64,7 @@ export default function ProjectView({ project, next }: { project: Project; next:
         )}
       </header>
 
-      {/* ── Outcomes, up front ─────────────────────────────────────── */}
-      {outcomes && <Outcomes block={outcomes} stats={project.stats} />}
-
-      {/* ── Project details ────────────────────────────────────────── */}
+      {/* ── Project details, with the personas alongside ───────────── */}
       <section className="shell mt-16 md:mt-24">
         <RuleDraw />
         <span className="t-meta mt-4 block">Project details</span>
@@ -67,9 +75,26 @@ export default function ProjectView({ project, next }: { project: Project; next:
             </Reveal>
           ))}
         </div>
+
+        {!soon && project.personas && (
+          <Personas
+            label={project.n === "04" ? "Journey pillars" : "Personas"}
+            items={project.personas}
+          />
+        )}
       </section>
 
-      {soon ? <ComingSoon project={project} /> : <FullCase project={project} blocks={blocks} />}
+      {soon ? (
+        <ComingSoon project={project} />
+      ) : (
+        <FullCase
+          project={project}
+          cards={cards}
+          solved={solved}
+          contribution={contribution}
+          outcomes={outcomes}
+        />
+      )}
 
       {/* ── Next ───────────────────────────────────────────────────── */}
       <section className="border-t border-[color:var(--line)]">
@@ -165,61 +190,117 @@ function Figure({ value }: { value: string }) {
 }
 
 /* ── Full case study ──────────────────────────────────────────────── */
-function FullCase({ project, blocks }: { project: Project; blocks: ProjectBlock[] }) {
+function FullCase({
+  project,
+  cards,
+  solved,
+  contribution,
+  outcomes,
+}: {
+  project: Project;
+  cards: ProjectBlock[];
+  solved?: ProjectBlock;
+  contribution?: ProjectBlock;
+  outcomes?: ProjectBlock;
+}) {
   return (
     <>
-      <section className="section shell">
-        {blocks.map((block) => (
-          <Reveal key={block.n} y={22}>
-            <div className="tick-rule grid12 gap-y-5 py-10 md:py-14">
-              <div className="col-span-12 flex items-baseline gap-4 lg:col-span-4">
-                <span className="t-meta muted-2 text-[10px]">({block.n})</span>
-                <h2 className="t-lede">
-                  <SplitText stagger={0.012}>{block.label}</SplitText>
-                </h2>
-              </div>
+      {/* ── Groundwork, three across ───────────────────────────────── */}
+      {cards.length > 0 && (
+        <section className="shell mt-20 md:mt-28">
+          <div className="grid12 gap-y-6">
+            {cards.map((block, i) => (
+              <Reveal
+                key={block.n}
+                delay={i * 0.06}
+                y={20}
+                className="col-span-12 md:col-span-6 lg:col-span-4"
+              >
+                <div className="hairline flex h-full flex-col p-7 md:p-8">
+                  <div className="flex items-start justify-between">
+                    <span className="text-[color:var(--fg)] opacity-70">
+                      <BlockIcon label={block.label} />
+                    </span>
+                    <span className="t-meta muted-2 text-[10px]">({block.n})</span>
+                  </div>
 
-              <div className="col-span-12 lg:col-span-7 lg:col-start-6">
-                {block.body?.map((para, n) => (
-                  <p key={n} className="t-body mb-4 max-w-2xl last:mb-0">
-                    {para}
-                  </p>
-                ))}
+                  <h2 className="t-sub mt-8">{block.label}</h2>
 
-                {block.items && (
-                  <ul className="mt-5 space-y-2">
-                    {block.items.map((it) => (
-                      <li key={it} className="t-body flex items-start gap-3">
-                        <Plus size={9} className="mt-2 shrink-0 opacity-50" />
-                        {it}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                  {block.body?.map((para, n) => (
+                    <p key={n} className="t-body mt-3 first:mt-4">
+                      {para}
+                    </p>
+                  ))}
 
-                {(block.label === "Feature system" || block.label === "Signature moments") &&
-                  project.features && (
-                    <FeatureGrid label={project.featuresLabel} items={project.features} />
+                  {block.items && (
+                    <ul className="mt-5 space-y-2">
+                      {block.items.map((it) => (
+                        <li key={it} className="t-meta flex items-start gap-2.5">
+                          <Plus size={8} className="mt-1 shrink-0 opacity-50" />
+                          {it}
+                        </li>
+                      ))}
+                    </ul>
                   )}
+                </div>
+              </Reveal>
+            ))}
+          </div>
 
-                {block.label === "How it was solved" && project.tokens && (
-                  <Tokens tokens={project.tokens} typeface={project.typeface} />
-                )}
-              </div>
-            </div>
-          </Reveal>
-        ))}
-      </section>
-
-      {project.personas && (
-        <Personas
-          label={project.n === "04" ? "Journey pillars" : "Personas"}
-          items={project.personas}
-        />
+          {project.features && (
+            <FeatureGrid label={project.featuresLabel} items={project.features} />
+          )}
+        </section>
       )}
 
-      <Gallery project={project} />
+      {/* ── How it was solved ──────────────────────────────────────── */}
+      {solved && <Statement block={solved} />}
+
+      {/* ── My Contribution, on its own ────────────────────────────── */}
+      {contribution && <Statement block={contribution} />}
+
+      {/* ── Outcomes, after the contribution ───────────────────────── */}
+      {outcomes && <Outcomes block={outcomes} stats={project.stats} />}
+
+      <Gallery project={project} className="mt-20 md:mt-28" />
     </>
+  );
+}
+
+/* ── A full-width prose block: label left, argument right ─────────── */
+function Statement({ block }: { block: ProjectBlock }) {
+  return (
+    <section className="shell mt-20 md:mt-28">
+      <Reveal y={22}>
+        <div className="tick-rule grid12 gap-y-5 pb-10 md:pb-14">
+          <div className="col-span-12 flex items-baseline gap-4 lg:col-span-4">
+            <span className="t-meta muted-2 text-[10px]">({block.n})</span>
+            <h2 className="t-lede">
+              <SplitText stagger={0.012}>{block.label}</SplitText>
+            </h2>
+          </div>
+
+          <div className="col-span-12 lg:col-span-7 lg:col-start-6">
+            {block.body?.map((para, n) => (
+              <p key={n} className="t-body mb-4 max-w-2xl last:mb-0">
+                {para}
+              </p>
+            ))}
+
+            {block.items && (
+              <ul className="mt-5 space-y-2">
+                {block.items.map((it) => (
+                  <li key={it} className="t-body flex items-start gap-3">
+                    <Plus size={9} className="mt-2 shrink-0 opacity-50" />
+                    {it}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </Reveal>
+    </section>
   );
 }
 
@@ -307,39 +388,6 @@ function FeatureGrid({ label, items }: { label?: string; items: string[] }) {
   );
 }
 
-function Tokens({
-  tokens,
-  typeface,
-}: {
-  tokens: { name: string; value: string }[];
-  typeface?: string;
-}) {
-  return (
-    <div className="mt-10">
-      <span className="t-meta muted-2 block">Design tokens</span>
-      <div className="mt-5 flex flex-wrap gap-x-8 gap-y-5">
-        {tokens.map((t) => (
-          <div key={t.name} className="flex items-center gap-3">
-            <span
-              className="hairline block h-7 w-7 shrink-0"
-              style={{ background: t.value }}
-              aria-hidden
-            />
-            <span>
-              <span className="t-meta block">{t.name}</span>
-              <span className="t-meta muted-2 mt-0.5 block">{t.value}</span>
-            </span>
-          </div>
-        ))}
-      </div>
-      {typeface && (
-        <p className="t-meta muted-2 mt-6">
-          Typeface: <span className="text-[color:var(--fg)]">{typeface}</span>
-        </p>
-      )}
-    </div>
-  );
-}
 
 function Personas({ label, items }: { label: string; items: string[] }) {
   return (
