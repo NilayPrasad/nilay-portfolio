@@ -218,8 +218,6 @@ export const reviews = [
   },
 ];
 
-/** How many show before the reveal. */
-export const reviewsLead = 6;
 
 /* ── About · Profile ─────────────────────────────────────────────────
    Everything below comes from the CV. This is the credentials view, so
