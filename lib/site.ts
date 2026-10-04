@@ -23,8 +23,7 @@ export const site = {
   socials: [
     { label: "Instagram", href: "https://instagram.com" },
     { label: "Behance", href: "https://www.behance.net/nilayprasad" },
-    { label: "LinkedIn", href: "https://linkedin.com" },
-    { label: "Twitter", href: "https://x.com" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/nilay-prasad-62b6761ab/" },
   ],
 };
 
