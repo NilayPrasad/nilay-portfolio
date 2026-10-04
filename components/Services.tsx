@@ -29,22 +29,34 @@ import { services, serviceIntro } from "@/lib/site";
  * cycle drive the accordion meant the list re-flowed on its own every
  * ten-odd seconds, which the centred layout turns into a visible drift
  * in both directions.
+ *
+ * On a phone or tablet held upright the reel would stack under the whole
+ * list, out of sight of the row you just opened, so it steps aside and
+ * each open row carries its own clip instead. Landscape keeps the reel.
  */
+/* Mirrors the `upright` variant in globals.css. */
+const UPRIGHT = "(orientation: portrait) and (max-width: 1099.98px)";
+
 export default function Services() {
   const reduce = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
   const videos = useRef<(HTMLVideoElement | null)[]>([]);
+  const inline = useRef<(HTMLVideoElement | null)[]>([]);
 
   const [cursor, setCursor] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
   const [inView, setInView] = useState(false);
+  const [compact, setCompact] = useState(false);
 
   /* Which clip plays, and which row — if any — has its copy open. */
   const shown = hovered ?? picked ?? cursor;
   const expanded = hovered ?? picked;
-  const cycling = !reduce && inView && hovered === null && picked === null;
+  const cycling =
+    !compact && !reduce && inView && hovered === null && picked === null;
+  /* The clip the reel should be decoding; none while it's hidden. */
+  const live = compact ? -1 : shown;
 
   const { scrollYProgress } = useScroll({
     target: mediaRef,
@@ -62,11 +74,19 @@ export default function Services() {
     setCursor(i);
   }, []);
 
+  useEffect(() => {
+    const mq = window.matchMedia(UPRIGHT);
+    const sync = () => setCompact(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
   /* Only the visible clip is allowed to decode. */
   useEffect(() => {
     videos.current.forEach((v, i) => {
       if (!v) return;
-      if (i !== shown) {
+      if (i !== live) {
         v.pause();
         return;
       }
@@ -74,7 +94,27 @@ export default function Services() {
       v.currentTime = 0;
       void v.play().catch(() => {});
     });
-  }, [shown, reduce]);
+  }, [live, reduce]);
+
+  /* Compact layout: the open row's own clip plays from the top, the rest
+     sit paused. */
+  useEffect(() => {
+    if (!compact) return;
+    inline.current.forEach((v, i) => {
+      if (!v) return;
+      if (i !== expanded || !inView || reduce) {
+        v.pause();
+        return;
+      }
+      if (v.paused) void v.play().catch(() => {});
+    });
+  }, [compact, expanded, inView, reduce]);
+
+  useEffect(() => {
+    if (!compact || expanded === null) return;
+    const v = inline.current[expanded];
+    if (v) v.currentTime = 0;
+  }, [compact, expanded]);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -93,10 +133,10 @@ export default function Services() {
   }, [inView, reduce]);
 
   useEffect(() => {
-    if (!inView || reduce) return;
-    const v = videos.current[shown];
+    if (!inView || reduce || live < 0) return;
+    const v = videos.current[live];
     if (v?.paused) void v.play().catch(() => {});
-  }, [inView, shown, reduce]);
+  }, [inView, live, reduce]);
 
   const advance = useCallback(
     (i: number) => {
@@ -121,7 +161,7 @@ export default function Services() {
       <div className="grid12 mt-16 gap-y-14 md:mt-24 lg:items-center">
         {/* ── List ────────────────────────────────────────────────── */}
         <ul
-          className="col-span-12 lg:col-span-7"
+          className="col-span-12 lg:col-span-7 upright:col-span-12"
           onPointerLeave={() => setHovered(null)}
         >
           {services.map((s, i) => (
@@ -133,8 +173,16 @@ export default function Services() {
                     className="block w-full cursor-pointer text-left py-5 md:py-6"
                     aria-expanded={expanded === i}
                     aria-controls={`service-copy-${s.n}`}
-                    onPointerEnter={() => setHovered(i)}
-                    onFocus={() => setHovered(i)}
+                    /* Hover and focus previews are for mouse and keyboard
+                       only. A tap also fires both, and on Android the focus
+                       sticks, so the preview would hold a row open after a
+                       second tap had released it. */
+                    onPointerEnter={(e) => {
+                      if (e.pointerType === "mouse") setHovered(i);
+                    }}
+                    onFocus={(e) => {
+                      if (e.currentTarget.matches(":focus-visible")) setHovered(i);
+                    }}
                     onBlur={() => setHovered(null)}
                     onClick={() => pick(i)}
                   >
@@ -174,6 +222,21 @@ export default function Services() {
                       className="overflow-hidden"
                     >
                       <p className="t-body max-w-xl pt-4">{s.body}</p>
+                      {compact && (
+                        <div className="media mt-6 aspect-[3/4] w-full max-w-xs">
+                          <video
+                            ref={(el) => {
+                              inline.current[i] = el;
+                            }}
+                            src={s.video}
+                            muted
+                            loop
+                            playsInline
+                            preload={expanded === i ? "auto" : "none"}
+                            aria-hidden
+                          />
+                        </div>
+                      )}
                     </motion.div>
                   </button>
                 </div>
@@ -183,7 +246,7 @@ export default function Services() {
         </ul>
 
         {/* ── Reel ────────────────────────────────────────────────── */}
-        <div className="rail col-span-12 lg:col-span-4 lg:col-start-9 lg:pl-10">
+        <div className="rail col-span-12 lg:col-span-4 lg:col-start-9 lg:pl-10 upright:hidden">
           <div ref={mediaRef} className="media aspect-[3/4] w-full">
             {services.map((s, i) => (
               <motion.video
