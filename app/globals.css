@@ -400,6 +400,22 @@ html.lenis, html.lenis body { height: auto; }
   .muted { color: var(--meta); }
   .muted-2 { color: var(--meta-2); }
 
+  /* Key phrases in case-study copy: full-strength text over a low marker
+     band that sweeps in once the passage is on screen (see Copy in
+     ProjectView). The default slice decoration carries one sweep across
+     every line a phrase wraps onto. */
+  .mark {
+    --band: color-mix(in srgb, var(--fg) 22%, transparent);
+    color: var(--fg);
+    font-weight: 500;
+    background: linear-gradient(var(--band), var(--band)) no-repeat 0 80% / 0% 0.55em;
+    transition: background-size 0.9s var(--ease) calc(0.2s + var(--i, 0) * 0.12s);
+  }
+  [data-lit] .mark { background-size: 100% 0.55em; }
+  @media (prefers-reduced-motion: reduce) {
+    .mark { transition: none; background-size: 100% 0.55em; }
+  }
+
   /* ── Split-text mask reveal (§4.2) ──────────────────────────────────── */
   /* No will-change here on purpose. There are 150+ of these on a page and
      a standing will-change promotes every one to its own composited layer,

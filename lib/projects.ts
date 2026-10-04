@@ -91,7 +91,7 @@ export const projects: Project[] = [
         label: "Ideation",
         body: [
           "Problem statement: how might we evolve the platform into an **agentic AI engine** that **proactively orchestrates end-to-end processes** with **transparency, control, and trust**?",
-          "Explored agent behaviours, cross-process collaboration, and a single interface language across Discover, Define, Design, Develop, and Deliver.",
+          "Explored agent behaviours, cross-process collaboration, and **a single interface language** across Discover, Define, Design, Develop, and Deliver.",
         ],
       },
       {
@@ -106,17 +106,17 @@ export const projects: Project[] = [
         label: "How it was solved",
         body: [
           "Unified **30+ apps into one ecosystem**. Agents **handle routine decisions** and **escalate exceptions** to a human companion.",
-          "A glassmorphic design system (violet-led palette, full component library) documented for handoff, with a structured review-and-feedback loop.",
+          "A **glassmorphic design system** (violet-led palette, full component library) **documented for handoff**, with a structured review-and-feedback loop.",
         ],
       },
       {
         n: "05",
         label: "My Contribution",
         body: [
-          "This was **full UX and UI ownership**, not a layer applied on top of someone else's structure. I started with the problem rather than the screens: teams were moving between dozens of tools to close a single item, and most of the delay sat in the handoffs rather than the work. I wrote the **problem statements**, mapped the **as-is journey** for each process area, and built the **to-be flow** against it so we could see which steps existed only because the old system needed them.",
-          "I built the personas out of the research: the coordinator who owns throughput, the analyst who works exceptions, and the manager who needs a defensible audit trail. Each has a different definition of done, and the information architecture had to serve all three without becoming three products. I set the **navigation model**, the hierarchy inside each process area, and the shape of the **agentic review loop**, so a person can always see what an agent did and why.",
-          "The interface work followed from that: wireframes, flows, component states, and a documented design system with a colour language for agent activity. **Accessibility was specified alongside the components** rather than audited at the end, so contrast, focus order, and state labelling shipped with them.",
-          "Motion and microinteraction are part of that interface and I owned them too. Because the system acts on its own, movement had to carry meaning: an agent picking work up, deciding autonomously, and escalating to a person each read differently. I specified timing, easing, and sequencing, documented them with the component library, then solved interaction and consistency issues through build as real data exposed the edge cases.",
+          "This was **full UX and UI ownership**, not a layer applied on top of someone else's structure. I started with the problem rather than the screens: teams were moving between dozens of tools to close a single item, and **most of the delay sat in the handoffs rather than the work**. I wrote the **problem statements**, mapped the **as-is journey** for each process area, and built the **to-be flow** against it so we could see which steps existed only because the old system needed them.",
+          "I built the personas out of the research: the coordinator who owns throughput, the analyst who works exceptions, and the manager who needs a defensible audit trail. Each has a different definition of done, and **the information architecture had to serve all three without becoming three products**. I set the **navigation model**, the hierarchy inside each process area, and the shape of the **agentic review loop**, so **a person can always see what an agent did and why**.",
+          "The interface work followed from that: wireframes, flows, component states, and **a documented design system** with a colour language for agent activity. **Accessibility was specified alongside the components** rather than audited at the end, so contrast, focus order, and state labelling shipped with them.",
+          "**Motion and microinteraction** are part of that interface and I owned them too. Because the system acts on its own, **movement had to carry meaning**: an agent picking work up, deciding autonomously, and escalating to a person each read differently. I specified **timing, easing, and sequencing**, documented them with the component library, then **solved interaction and consistency issues through build** as real data exposed the edge cases.",
         ],
         items: [
           "Problem statements, as-is and to-be flows",
@@ -131,7 +131,7 @@ export const projects: Project[] = [
         n: "06",
         label: "Outcomes & KPIs",
         body: [
-          "Loan processing moved from 36 hours to same day. First-time resolution rose from 75% to 95%, with 30% fewer repeat contacts.",
+          "Loan processing moved **from 36 hours to same day**. First-time resolution rose **from 75% to 95%**, with **30% fewer repeat contacts**.",
         ],
       },
     ],
@@ -197,8 +197,8 @@ export const projects: Project[] = [
         n: "01",
         label: "Research",
         body: [
-          "Organizations struggle to align the workforce with fast-changing needs. Forecasting demand and matching internal and external talent is slow, causing skill gaps and costly recruitment.",
-          "Stakeholder interviews, a design hackathon, workflow mapping, and demand–supply data-flow analysis. Four personas were defined, with end-to-end journeys mapped for each.",
+          "Organizations struggle to **align the workforce with fast-changing needs**. Forecasting demand and matching internal and external talent is slow, causing **skill gaps and costly recruitment**.",
+          "Stakeholder interviews, a **design hackathon**, workflow mapping, and demand–supply data-flow analysis. **Four personas** were defined, with **end-to-end journeys** mapped for each.",
         ],
       },
       {
@@ -206,7 +206,7 @@ export const projects: Project[] = [
         label: "Ideation",
         body: [
           "An **agentic AI layer** that assesses **demand and supply in real time**.",
-          "Brainstormed features, wireframes, and journeys; prioritized surge alerts, overdue tracking, and gap forecasting; defined a clear module navigation.",
+          "Brainstormed features, wireframes, and journeys; prioritized **surge alerts, overdue tracking, and gap forecasting**; defined **a clear module navigation**.",
         ],
       },
       {
@@ -226,10 +226,10 @@ export const projects: Project[] = [
         n: "05",
         label: "My Contribution",
         body: [
-          "I owned the **experience end to end** here, from **framing the problem** to the final screens. The brief arrived as a request for dashboards. The actual problem was that demand and supply data lived in separate systems, so nobody saw a gap until it had already cost a quarter. I rewrote that into problem statements the team could design against.",
-          "I **identified the personas** and what each was really trying to do: the lead forecasting against targets, the business owner watching profitability, and the analyst working exceptions. Mapping their as-is paths showed how much of the day went to assembling a picture rather than acting on one, so the to-be flow put the gap, its cause, and the action on a single surface.",
-          "That decided the **information architecture**: a module structure that holds revenue, supply, and profitability without burying any of them, a consistent hierarchy inside each card, and an alert model that separates something to watch from something to act on. I designed the screens against it, treating readability and accessibility as structural given how dense the data is.",
-          "Motion and microinteraction sit inside that work rather than beside it. Data-heavy screens punish careless movement, so the real decision was what earns animation at all. A chart updating, an alert arriving, and the assistant responding each had to read differently at a glance, and the assistant needed thinking, streaming, and resolved states that were distinguishable before a word was read.",
+          "I owned the **experience end to end** here, from **framing the problem** to the final screens. The brief arrived as a request for dashboards. **The actual problem was that demand and supply data lived in separate systems**, so nobody saw a gap until it had already cost a quarter. I **rewrote that into problem statements** the team could design against.",
+          "I **identified the personas** and what each was really trying to do: the lead forecasting against targets, the business owner watching profitability, and the analyst working exceptions. Mapping their as-is paths showed **how much of the day went to assembling a picture rather than acting on one**, so **the to-be flow put the gap, its cause, and the action on a single surface**.",
+          "That decided the **information architecture**: a module structure that holds revenue, supply, and profitability without burying any of them, a consistent hierarchy inside each card, and **an alert model that separates something to watch from something to act on**. I designed the screens against it, treating **readability and accessibility as structural** given how dense the data is.",
+          "**Motion and microinteraction** sit inside that work rather than beside it. Data-heavy screens punish careless movement, so the real decision was **what earns animation at all**. A chart updating, an alert arriving, and the assistant responding each had to read differently at a glance, and the assistant needed **thinking, streaming, and resolved states** that were distinguishable before a word was read.",
         ],
         items: [
           "Problem statements reframed from the original brief",
@@ -244,7 +244,7 @@ export const projects: Project[] = [
         n: "06",
         label: "Outcomes & KPIs",
         body: [
-          "Shipped high-fidelity dashboards and flows. Delivered surge alerts, overdue tracking, and demand–supply gap forecasting, and established the module navigation and a milestone roadmap into build.",
+          "Shipped **high-fidelity dashboards and flows**. Delivered **surge alerts, overdue tracking, and demand–supply gap forecasting**, and established the module navigation and a milestone roadmap into build.",
           "Quantified field KPIs are not disclosed.",
         ],
       },
@@ -307,21 +307,21 @@ export const projects: Project[] = [
         n: "01",
         label: "Research",
         body: [
-          "Most manufacturers run enquiry management through a CRM website and app, routing enquiries from dealer manager to sales rep to admin, and tagging them hot, warm, or cold.",
-          "Benchmarked the walk-in experience at three competitor dealerships — tablet, paper, and desktop respectively. Interviewed sales executives: behaviour is offline-first, follow-up is valued most, and usage varies sharply by point in the journey.",
-          "A UX audit covered onboarding, hierarchy, interaction, consistency, and navigation.",
+          "Most manufacturers run enquiry management through a **CRM website and app**, routing enquiries from dealer manager to sales rep to admin, and tagging them **hot, warm, or cold**.",
+          "**Benchmarked the walk-in experience at three competitor dealerships** — tablet, paper, and desktop respectively. Interviewed sales executives: behaviour is **offline-first**, **follow-up is valued most**, and usage varies sharply by point in the journey.",
+          "A **UX audit** covered onboarding, hierarchy, interaction, consistency, and navigation.",
         ],
       },
       {
         n: "02",
         label: "Ideation",
         items: [
-          "Improve training with a guided walkthrough",
-          "Smart enquiry creation, prioritized by customer type and temperature",
-          "Reduce cognitive load with a vehicle catalogue",
-          "Compare vehicles side by side",
-          "Add value at touchpoints — quotations and brochures",
-          "Create an initial enquiry with minimal details",
+          "Improve training with a **guided walkthrough**",
+          "**Smart enquiry creation**, prioritized by customer type and temperature",
+          "Reduce cognitive load with a **vehicle catalogue**",
+          "**Compare vehicles** side by side",
+          "Add value at touchpoints — **quotations and brochures**",
+          "Create an initial enquiry with **minimal details**",
         ],
       },
       {
@@ -341,10 +341,10 @@ export const projects: Project[] = [
         n: "05",
         label: "My Contribution",
         body: [
-          "This one was **mine end to end**, and the UX work was the larger half of it. I ran the **research and the UX audit** first, because the brief assumed the problem was the software when much of it was the process around it. The problem statements came from what the audit actually found: enquiries captured twice, follow-ups that depended on memory, and a showroom conversation interrupted by data entry.",
-          "I built the personas from that. The sales representative works standing up and mid-conversation; the walk-in customer sees the screen for a moment. Their pain points pull in opposite directions, so I mapped both **as-is journeys** and designed the **to-be flow** to **remove the steps that existed for the system rather than the person**. Several screens in the original path turned out not to need to exist.",
-          "The **information architecture** split the product into a **CRM mode** and a **customer-facing showcase mode**, so the representative never has to apologise for the interface mid-conversation. I designed the full interface against that structure, delivered a style guide, and treated accessibility and one-handed reach as constraints from the start given where the app is used.",
-          "Motion and microinteraction were part of that interface work. On a dealership tablet movement does something practical: it confirms an enquiry was captured, orients the representative between the two modes, and gives the customer-facing screens the feel of a product demo rather than a form. I kept it light, because feedback had to be immediate and could never block the next tap.",
+          "This one was **mine end to end**, and the UX work was the larger half of it. I ran the **research and the UX audit** first, because the brief assumed the problem was the software when much of it was the process around it. The problem statements came from what the audit actually found: **enquiries captured twice, follow-ups that depended on memory, and a showroom conversation interrupted by data entry**.",
+          "I built the personas from that. The sales representative works standing up and mid-conversation; the walk-in customer sees the screen for a moment. Their pain points pull in opposite directions, so I mapped both **as-is journeys** and designed the **to-be flow** to **remove the steps that existed for the system rather than the person**. **Several screens in the original path turned out not to need to exist**.",
+          "The **information architecture** split the product into a **CRM mode** and a **customer-facing showcase mode**, so the representative never has to apologise for the interface mid-conversation. I designed the full interface against that structure, delivered a style guide, and treated **accessibility and one-handed reach as constraints from the start** given where the app is used.",
+          "**Motion and microinteraction** were part of that interface work. On a dealership tablet movement does something practical: it confirms an enquiry was captured, orients the representative between the two modes, and gives the customer-facing screens **the feel of a product demo rather than a form**. I kept it light, because **feedback had to be immediate and could never block the next tap**.",
         ],
         items: [
           "Research and a UX audit of the existing process",
@@ -360,7 +360,7 @@ export const projects: Project[] = [
         n: "06",
         label: "Outcomes",
         body: [
-          "A validated redesign that lowers cognitive load, speeds onboarding, and fits the rep's offline-first journey. Delivered end to end: research, UX audit, ideation, and high-fidelity design with a style guide.",
+          "A **validated redesign** that **lowers cognitive load, speeds onboarding**, and fits the rep's offline-first journey. **Delivered end to end**: research, UX audit, ideation, and high-fidelity design with a style guide.",
           "Field KPIs are not applicable — this was an academic project.",
         ],
       },
@@ -417,16 +417,16 @@ export const projects: Project[] = [
         n: "01",
         label: "The brief",
         body: [
-          "650+ CXOs visit each year, and the pitch has to land in one session. The story is huge: global headcount, a fifteen-city India footprint, twenty-plus years of delivery evolution, five pillars, and client proof.",
-          "Turn it into one guided experience a presenter drives live — no slides — diving deep where a given executive cares, then returning cleanly.",
+          "**650+ CXOs visit each year**, and **the pitch has to land in one session**. The story is huge: global headcount, a fifteen-city India footprint, twenty-plus years of delivery evolution, five pillars, and client proof.",
+          "Turn it into **one guided experience a presenter drives live** — **no slides** — diving deep where a given executive cares, then **returning cleanly**.",
         ],
       },
       {
         n: "02",
         label: "Experience structure",
         body: [
-          "Opens on a personalized welcome that greets the executives by name, branded to their company, with all systems active and agents ready.",
-          "Three modes: Overview — a global globe, India map, differentiators, and the reinvention journey. Journey — five pillars, each a 3D world. Case Studies — a spin-to-explore function wheel leading to client proof.",
+          "Opens on a **personalized welcome** that **greets the executives by name**, branded to their company, with all systems active and agents ready.",
+          "**Three modes**: **Overview** — a global globe, India map, differentiators, and the reinvention journey. **Journey** — five pillars, each a 3D world. **Case Studies** — a spin-to-explore function wheel leading to client proof.",
         ],
       },
       {
@@ -445,18 +445,18 @@ export const projects: Project[] = [
         n: "05",
         label: "Motion & 3D craft",
         body: [
-          "Every pillar carries its own generative 3D render — spheres, an orbital atom, a globe, a function wheel — and transitions run to millisecond-level motion specs.",
-          "I authored the motion specs and the agent master prompts so AI could build to intent, holding the language consistent across a dozen pivots. Dark, cinematic canvas; violet and teal accents; glassmorphic cards.",
+          "Every pillar carries **its own generative 3D render** — spheres, an orbital atom, a globe, a function wheel — and transitions run to **millisecond-level motion specs**.",
+          "I authored **the motion specs and the agent master prompts** so **AI could build to intent**, holding the language consistent across **a dozen pivots**. Dark, cinematic canvas; violet and teal accents; glassmorphic cards.",
         ],
       },
       {
         n: "06",
         label: "My Contribution",
         body: [
-          "This is the project where I was **most hands-on across the whole discipline**. The problem was not that the existing material was badly made. It was that a 45-minute CXO conversation cannot be a deck. I framed that as the design problem: the story had to branch on whatever the room cared about and still land as one argument.",
-          "I identified the two audiences and designed for the tension between them. The presenter needs to steer without appearing to operate software, and the CXOs need to feel the conversation is about their business rather than a standard pitch. I mapped how these sessions ran **as-is**, then built the **to-be structure** around **a spine that holds while any branch can be taken and returned from**.",
-          "From there I set the **information architecture**: overview, differentiators, journey, and case studies, with every deep-dive guaranteed to return cleanly to the point it branched from. I designed the interface and the signature moments against that structure, and kept the whole thing legible at boardroom distance, which drove type size, contrast, and how much can sit on screen at once.",
-          "Motion and microinteraction mattered more here than anywhere else, because a presenter drives it live and any hesitation is visible to the room. I specified timing to the millisecond, paired with the development team through build rather than handing over a document, and ran QA by rehearsing the paths a presenter actually takes until the state and timing issues that only surface at full size were gone.",
+          "This is the project where I was **most hands-on across the whole discipline**. The problem was not that the existing material was badly made. It was that **a 45-minute CXO conversation cannot be a deck**. I framed that as the design problem: **the story had to branch on whatever the room cared about and still land as one argument**.",
+          "I identified **the two audiences** and designed for the tension between them. The presenter needs to steer without appearing to operate software, and the CXOs need to feel the conversation is about their business rather than a standard pitch. I mapped how these sessions ran **as-is**, then built the **to-be structure** around **a spine that holds while any branch can be taken and returned from**.",
+          "From there I set the **information architecture**: overview, differentiators, journey, and case studies, with **every deep-dive guaranteed to return cleanly to the point it branched from**. I designed the interface and the signature moments against that structure, and kept the whole thing **legible at boardroom distance**, which drove type size, contrast, and how much can sit on screen at once.",
+          "**Motion and microinteraction mattered more here than anywhere else**, because a presenter drives it live and any hesitation is visible to the room. I **specified timing to the millisecond**, **paired with the development team through build** rather than handing over a document, and **ran QA by rehearsing the paths a presenter actually takes** until the state and timing issues that only surface at full size were gone.",
         ],
         items: [
           "Framed the problem and the narrative architecture",
@@ -472,7 +472,7 @@ export const projects: Project[] = [
         n: "07",
         label: "Outcomes",
         body: [
-          "A boardroom-ready, slide-free experience that compresses a sprawling global story into one guided, presenter-steered, personalized conversation — repeatable across client visits.",
+          "A **boardroom-ready, slide-free experience** that compresses a sprawling global story into one guided, presenter-steered, personalized conversation — **repeatable across client visits**.",
         ],
       },
     ],

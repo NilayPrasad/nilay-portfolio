@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { SplitText, Reveal, RuleDraw, Counter } from "./motion";
+import type { CSSProperties } from "react";
+import { SplitText, Reveal, RuleDraw, Counter, useInView, useRef } from "./motion";
 import MediaSlot from "./MediaSlot";
 import { Plus, Arrow, BlockIcon } from "./Monogram";
 import type { Project, ProjectBlock } from "@/lib/projects";
@@ -160,7 +161,7 @@ function Outcomes({
           <div className="col-span-12 lg:col-span-7 lg:col-start-6">
             {block.body.map((para, i) => (
               <p key={i} className="t-body mb-4 max-w-2xl last:mb-0">
-                {para}
+                <Copy text={para} />
               </p>
             ))}
           </div>
@@ -239,7 +240,7 @@ function FullCase({
                       {block.items.map((it) => (
                         <li key={it} className="t-meta flex items-start gap-2.5">
                           <Plus size={8} className="mt-1 shrink-0 opacity-50" />
-                          {it}
+                          <Copy text={it} />
                         </li>
                       ))}
                     </ul>
@@ -283,22 +284,27 @@ function Statement({ block }: { block: ProjectBlock }) {
           </div>
 
           <div className="col-span-12 lg:col-span-7 lg:col-start-6">
+            {/* The summary leads, so a skim gets the shape of the work
+                before committing to the long-form account under it. */}
+            {block.items && (
+              <div className="mb-8 border-b border-[color:var(--line)] pb-8 md:mb-10 md:pb-10">
+                <span className="t-meta muted-2 block">At a glance</span>
+                <ul className="mt-5 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+                  {block.items.map((it) => (
+                    <li key={it} className="t-body flex items-start gap-3 text-[color:var(--fg)]">
+                      <Plus size={9} className="mt-2 shrink-0 opacity-50" />
+                      <Copy text={it} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {block.body?.map((para, n) => (
               <p key={n} className="t-body mb-4 max-w-2xl last:mb-0">
                 <Copy text={para} />
               </p>
             ))}
-
-            {block.items && (
-              <ul className="mt-5 space-y-2">
-                {block.items.map((it) => (
-                  <li key={it} className="t-body flex items-start gap-3">
-                    <Plus size={9} className="mt-2 shrink-0 opacity-50" />
-                    {it}
-                  </li>
-                ))}
-              </ul>
-            )}
           </div>
         </div>
       </Reveal>
@@ -375,21 +381,29 @@ function Gallery({ project, className = "" }: { project: Project; className?: st
 
 /* ── Emphasis inside the copy ─────────────────────────────────────────
    Body strings carry **markers** around the phrases worth catching on a
-   skim. Rendering them in place keeps the fact in its sentence, which a
-   detached chip strip could not do. */
+   skim. They stay in their sentence, and their marker bands sweep in, in
+   reading order, once the passage is on screen. */
 function Copy({ text }: { text: string }) {
+  if (!text.includes("**")) return <>{text}</>;
+  return <Marked parts={text.split("**")} />;
+}
+
+function Marked({ parts }: { parts: string[] }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const lit = useInView(ref, { once: true, amount: 0.5 });
+
   return (
-    <>
-      {text.split(/\*\*/).map((part, i) =>
+    <span ref={ref} data-lit={lit || undefined}>
+      {parts.map((part, i) =>
         i % 2 ? (
-          <strong key={i} className="font-medium text-[color:var(--fg)]">
+          <strong key={i} className="mark" style={{ "--i": (i - 1) / 2 } as CSSProperties}>
             {part}
           </strong>
         ) : (
           part
         ),
       )}
-    </>
+    </span>
   );
 }
 
