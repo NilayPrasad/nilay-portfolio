@@ -20,6 +20,20 @@ export type ProjectBlock = {
   items?: string[];
 };
 
+export type Metric = { value: string; label: string };
+
+/** A band of evidence. Each project shows only the kind it can honestly
+ *  support: KPIs where results are verified, outcomes where they are not.
+ *  `context` describes the scale of the problem and is never an outcome. */
+export type Evidence = {
+  label: string;
+  takeaway?: string;
+  metrics?: Metric[];
+  points?: string[];
+  /** Source or scope line set under the band. */
+  note?: string;
+};
+
 export type Slot = {
   label: string;
   /** Set this to a real path once cleared artwork exists. */
@@ -50,7 +64,9 @@ export type Project = {
   personas?: string[];
   tokens?: { name: string; value: string }[];
   typeface?: string;
-  stats?: { value: string; label: string }[];
+  /** Scale of the environment, shown ahead of the case study. */
+  context?: Evidence;
+  evidence?: Evidence;
   /** Coming-soon stubs list what the page will cover. */
   willCover?: string[];
   slots: Slot[];
@@ -127,13 +143,6 @@ export const projects: Project[] = [
           "Motion and microinteraction for agent states and escalation",
         ],
       },
-      {
-        n: "06",
-        label: "Outcomes & KPIs",
-        body: [
-          "Loan processing moved **from 36 hours to same day**. First-time resolution rose **from 75% to 95%**, with **30% fewer repeat contacts**.",
-        ],
-      },
     ],
     featuresLabel: "Feature system (7)",
     features: [
@@ -154,14 +163,16 @@ export const projects: Project[] = [
       { name: "Body", value: "#696F8C" },
     ],
     typeface: "Graphik",
-    stats: [
-      { value: "$70M", label: "Value delivered" },
-      { value: "95%+", label: "First-time-right" },
-      { value: "80%", label: "Cycle-time reduction — onboarding weeks to days" },
-      { value: "160k+", label: "Roles automated" },
-      { value: "3×", label: "Banking-portfolio revenue" },
-      { value: "30+", label: "Apps unified into one ecosystem" },
-    ],
+    evidence: {
+      label: "KPIs & Business Impact",
+      metrics: [
+        { value: "95%+", label: "First-time-right process accuracy" },
+        { value: "80%", label: "Cycle-time reduction" },
+        { value: "$70M", label: "Business value from touchless transactional processes" },
+        { value: "30+", label: "Applications unified into one ecosystem" },
+      ],
+      note: "Platform-level impact figures supplied by the business/program team; outcomes reflect the wider transformation and are not attributed solely to UX design.",
+    },
     slots: [
       { label: "Welcome screen — faster decisions, enhanced insights", src: "/projects/agentic-operations-platform/01.jpg" },
       { label: "Landscape view — workforce distribution map", src: "/projects/agentic-operations-platform/02.jpg" },
@@ -240,14 +251,6 @@ export const projects: Project[] = [
           "Motion for alerts, surge states, and assistant feedback",
         ],
       },
-      {
-        n: "06",
-        label: "Outcomes & KPIs",
-        body: [
-          "Shipped **high-fidelity dashboards and flows**. Delivered **surge alerts, overdue tracking, and demand–supply gap forecasting**, and established the module navigation and a milestone roadmap into build.",
-          "Quantified field KPIs are not disclosed.",
-        ],
-      },
     ],
     featuresLabel: "Feature system (4)",
     features: [
@@ -270,6 +273,17 @@ export const projects: Project[] = [
       { name: "Body", value: "#696F8C" },
     ],
     typeface: "Graphik",
+    evidence: {
+      label: "Key Outcomes",
+      takeaway: "Reactive workforce planning → Predictive workforce intelligence",
+      points: [
+        "Established the product's four-hub information architecture",
+        "Delivered demand and supply forecasting workflows",
+        "Introduced predictive alerts for surge, overdue demand and talent gaps",
+        "Designed agent-assisted workforce planning experiences",
+        "Defined high-fidelity flows and a roadmap into implementation",
+      ],
+    },
     slots: [
       { label: "Agent — conversational demand intake", src: "/projects/talent-intelligence-platform/01.jpg" },
       { label: "Command centre — revenue, supply and profitability", src: "/projects/talent-intelligence-platform/02.jpg" },
@@ -356,14 +370,6 @@ export const projects: Project[] = [
           "Motion and capture feedback tuned for live use",
         ],
       },
-      {
-        n: "06",
-        label: "Outcomes",
-        body: [
-          "A **validated redesign** that **lowers cognitive load, speeds onboarding**, and fits the rep's offline-first journey. **Delivered end to end**: research, UX audit, ideation, and high-fidelity design with a style guide.",
-          "Field KPIs are not applicable — this was an academic project.",
-        ],
-      },
     ],
     featuresLabel: "Feature system (5)",
     features: [
@@ -381,6 +387,16 @@ export const projects: Project[] = [
       { name: "Surface", value: "#FFFFFF" },
     ],
     typeface: "Montserrat",
+    evidence: {
+      label: "Research & Design Evidence",
+      takeaway: "One dealership platform. Two distinct moments of use.",
+      metrics: [
+        { value: "3", label: "Dealerships benchmarked across different enquiry-capture models" },
+        { value: "2", label: "Experience modes: Sales Executive and Customer Walk-In" },
+        { value: "End to end", label: "Project ownership: research → UX audit → ideation → product design → high-fidelity output" },
+      ],
+      note: "Field KPIs are not applicable — this was an academic project.",
+    },
     slots: [
       { label: "Customer walk-in — vehicle showcase", src: "/projects/enquiry-management-system/01.jpg" },
       { label: "Sales executive dashboard", src: "/projects/enquiry-management-system/02.jpg" },
@@ -468,13 +484,6 @@ export const projects: Project[] = [
           "Paired through build and ran QA on the live experience",
         ],
       },
-      {
-        n: "07",
-        label: "Outcomes",
-        body: [
-          "A **boardroom-ready, slide-free experience** that compresses a sprawling global story into one guided, presenter-steered, personalized conversation — **repeatable across client visits**.",
-        ],
-      },
     ],
     featuresLabel: "Signature moments (8)",
     features: [
@@ -494,12 +503,26 @@ export const projects: Project[] = [
       "Deep Industry & Functional Expertise",
       "Pervasive Innovation",
     ],
-    stats: [
-      { value: "1140K+", label: "Global headcount, on a live globe" },
-      { value: "350K+", label: "India, across 15+ city centers" },
-      { value: "650+", label: "CXOs in twelve months" },
-      { value: "23+", label: "Years — offshore delivery to reinvention engine" },
-    ],
+    context: {
+      label: "Experience Context",
+      metrics: [
+        { value: "650+", label: "CXO visits annually" },
+        { value: "1.14M+", label: "Global workforce represented in the story" },
+        { value: "350K+", label: "India workforce represented" },
+        { value: "15+", label: "India locations" },
+        { value: "23+", label: "Years of evolution compressed into the experience narrative" },
+      ],
+    },
+    evidence: {
+      label: "Experience Outcomes",
+      points: [
+        "Replaced a conventional slide-based pitch with a presenter-controlled digital experience",
+        "Created three navigable storytelling modes",
+        "Structured five transformation pillars into immersive story worlds",
+        "Enabled presenters to move non-linearly based on executive interest",
+        "Delivered motion specifications and build-to-intent QA for implementation consistency",
+      ],
+    },
     slots: [
       { label: "Personalized welcome", src: "/projects/immersive-boardroom-experience/01.jpg" },
       { label: "Journey pillars — compressing the journey", src: "/projects/immersive-boardroom-experience/02.jpg" },
@@ -536,6 +559,15 @@ export const projects: Project[] = [
       "Governance integration",
       "Before/after impact",
     ],
+    evidence: {
+      label: "Framework Outcomes",
+      points: [
+        "Created a repeatable heuristic evaluation structure",
+        "Established scoring and severity as a common UX language",
+        "Connected findings to prioritisation and governance",
+        "Made product-quality reviews more structured and comparable",
+      ],
+    },
     slots: [{ label: "Hero — scoring dashboard" }],
   },
 
@@ -563,6 +595,15 @@ export const projects: Project[] = [
       "Design system",
       "Adoption & outcomes",
     ],
+    evidence: {
+      label: "Product Outcomes",
+      points: [
+        "Centralized milestones, ownership and delivery status",
+        "Created a common view of cross-functional project health",
+        "Improved visibility of responsibilities and dependencies",
+        "Structured planning and governance around real delivery rhythms",
+      ],
+    },
     slots: [{ label: "Hero — delivery dashboard" }],
   },
 ];

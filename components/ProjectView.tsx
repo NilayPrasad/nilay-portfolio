@@ -5,15 +5,19 @@ import type { CSSProperties } from "react";
 import { SplitText, Reveal, RuleDraw, Counter, useInView, useRef } from "./motion";
 import MediaSlot from "./MediaSlot";
 import { Plus, Arrow, BlockIcon } from "./Monogram";
-import type { Project, ProjectBlock } from "@/lib/projects";
+import type { Evidence, Metric, Project, ProjectBlock } from "@/lib/projects";
 
 /**
  * The case-study template. One page per project, driven entirely by the
  * project object, so a new case study is a data edit and nothing else.
  *
- * Order: title and lede, the project details with its personas, then the
- * groundwork as a three-up card grid, how it was solved, the personal
- * contribution, and the outcomes. Screens close it out.
+ * Order: title and lede, the project details with its personas, any
+ * context figures, then the groundwork as a three-up card grid, how it was
+ * solved, the personal contribution, and the evidence. Screens close it out.
+ *
+ * Evidence is deliberately not uniform: KPIs only where results are
+ * verified, outcomes elsewhere. Context figures sit up top, away from the
+ * evidence, so the scale of a problem never reads as a result.
  *
  * The groundwork blocks sit in cards rather than stacked full-width rows
  * because they are scanned, not read: three across gives the shape of the
@@ -22,17 +26,14 @@ import type { Project, ProjectBlock } from "@/lib/projects";
 export default function ProjectView({ project, next }: { project: Project; next: Project }) {
   const soon = project.status === "soon";
 
-  // Three blocks get their own treatment; whatever is left is groundwork
+  // Two blocks get their own treatment; whatever is left is groundwork
   // and goes in the card grid. Matching on label rather than index keeps
   // this working for project 04, which has a different block sequence.
-  const find = (test: (l: string) => boolean) =>
-    soon ? undefined : project.blocks.find((b) => test(b.label));
-  const outcomes = find((l) => l.startsWith("Outcome"));
-  const solved = find((l) => l === "How it was solved");
-  const contribution = find((l) => l === "My Contribution");
-  const cards = soon
-    ? []
-    : project.blocks.filter((b) => b !== outcomes && b !== solved && b !== contribution);
+  const find = (label: string) =>
+    soon ? undefined : project.blocks.find((b) => b.label === label);
+  const solved = find("How it was solved");
+  const contribution = find("My Contribution");
+  const cards = soon ? [] : project.blocks.filter((b) => b !== solved && b !== contribution);
 
   return (
     <article>
@@ -85,16 +86,12 @@ export default function ProjectView({ project, next }: { project: Project; next:
         )}
       </section>
 
+      {project.context && <EvidenceBand evidence={project.context} />}
+
       {soon ? (
         <ComingSoon project={project} />
       ) : (
-        <FullCase
-          project={project}
-          cards={cards}
-          solved={solved}
-          contribution={contribution}
-          outcomes={outcomes}
-        />
+        <FullCase project={project} cards={cards} solved={solved} contribution={contribution} />
       )}
 
       {/* ── Next ───────────────────────────────────────────────────── */}
@@ -120,71 +117,95 @@ export default function ProjectView({ project, next }: { project: Project; next:
   );
 }
 
-/* ── Outcomes band ────────────────────────────────────────────────────
-   Figures at display size, one per cell over its own hairline, with the
-   written outcome beneath. Where a project has no disclosed numbers the
-   band still runs — it just carries the prose. */
-function Outcomes({
-  block,
-  stats,
-}: {
-  block: ProjectBlock;
-  stats?: { value: string; label: string }[];
-}) {
+/* ── Evidence band ────────────────────────────────────────────────────
+   Takeaway, figures, written outcomes, and a source line, each only when
+   the project has it. Figures sit at display size, one per cell over its
+   own hairline. */
+function EvidenceBand({ evidence }: { evidence: Evidence }) {
+  const { label, takeaway, metrics, points, note } = evidence;
+
   return (
     <section className="shell mt-16 md:mt-24">
       <RuleDraw />
       <div className="mt-4 flex items-baseline justify-between gap-6">
-        <span className="t-meta">{block.label}</span>
-        {stats && (
-          <span className="t-meta muted-2">{String(stats.length).padStart(2, "0")}</span>
-        )}
+        <span className="t-meta">{label}</span>
+        <span className="t-meta muted-2">
+          {String((metrics ?? points ?? []).length).padStart(2, "0")}
+        </span>
       </div>
 
-      {stats && (
-        <div className="mt-12 grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3">
-          {stats.map((s, i) => (
-            <Reveal key={s.label} delay={i * 0.07}>
-              <div className="rule pt-4">
-                <span className="t-numeral block leading-none">
-                  <Figure value={s.value} />
-                </span>
-                <span className="t-body mt-5 block max-w-xs">{s.label}</span>
-              </div>
+      {takeaway && (
+        <Reveal y={18}>
+          <p className="t-statement mt-10 max-w-4xl text-balance md:mt-12">{takeaway}</p>
+        </Reveal>
+      )}
+
+      {metrics && (
+        <div
+          className={`mt-12 grid grid-cols-2 gap-x-6 gap-y-12 ${
+            metrics.length === 4 ? "md:grid-cols-4" : "md:grid-cols-3"
+          }`}
+        >
+          {metrics.map((m, i) => (
+            <Reveal key={m.label} delay={i * 0.07}>
+              <MetricCell metric={m} narrow={metrics.length === 4} />
             </Reveal>
           ))}
         </div>
       )}
 
-      {block.body && (
-        <div className="grid12 mt-14">
-          <div className="col-span-12 lg:col-span-7 lg:col-start-6">
-            {block.body.map((para, i) => (
-              <p key={i} className="t-body mb-4 max-w-2xl last:mb-0">
-                <Copy text={para} />
-              </p>
-            ))}
-          </div>
-        </div>
+      {points && (
+        <ul className="mt-10 grid gap-x-8 gap-y-4 md:mt-12 md:grid-cols-2">
+          {points.map((p, i) => (
+            <li key={p}>
+              <Reveal delay={i * 0.05} y={14}>
+                <div className="t-body flex items-start gap-3 text-[color:var(--fg)]">
+                  <Plus size={9} className="mt-2 shrink-0 opacity-50" />
+                  {p}
+                </div>
+              </Reveal>
+            </li>
+          ))}
+        </ul>
       )}
+
+      {note && <p className="t-body muted-2 mt-12 max-w-2xl text-[13px] md:text-[14px]">{note}</p>}
     </section>
   );
 }
 
+/* Numbers roll on the counter at display size, scaled down in a four-up
+   row so "$70M" clears its cell on a laptop. A worded value ("End to end")
+   would overrun a cell at that size, so it drops to statement size. */
+function MetricCell({ metric, narrow }: { metric: Metric; narrow: boolean }) {
+  const numeric = /\d/.test(metric.value);
+  const size = narrow ? "text-[clamp(2.4rem,6.5vw,6rem)]" : "text-[clamp(2.4rem,8vw,7.5rem)]";
+  return (
+    <div className="rule pt-4">
+      <span className={`block leading-none ${numeric ? `t-numeral ${size}` : "t-statement"}`}>
+        {numeric ? <Figure value={metric.value} /> : metric.value}
+      </span>
+      <span className="t-body mt-5 block max-w-xs">{metric.label}</span>
+    </div>
+  );
+}
+
 /**
- * Figures arrive as strings — "$70M", "95%+", "3×", "-64%", "AAA" — so the
- * digits are split out and rolled on the site's counter while whatever
- * wraps them stays put. A value with no digits renders as written.
+ * Figures arrive as strings — "$70M", "95%+", "1.14M+", "-64%" — so the
+ * whole digits are split out and rolled on the site's counter, any decimal
+ * part stays at full strength beside them, and whatever wraps the number
+ * is dimmed.
  */
 function Figure({ value }: { value: string }) {
-  const m = value.match(/^(\D*?)(\d+)(.*)$/);
+  const m = value.match(/^(\D*?)(\d+)(\.\d+)?(.*)$/);
   if (!m) return <>{value}</>;
-  const [, prefix, digits, suffix] = m;
+  const [, prefix, digits, decimals, suffix] = m;
 
   return (
     <span className="inline-flex items-baseline">
       {prefix && <span className="opacity-50">{prefix}</span>}
       <Counter value={Number(digits)} duration={1.8} />
+      {decimals}
       {suffix && <span className="opacity-40">{suffix}</span>}
     </span>
   );
@@ -196,13 +217,11 @@ function FullCase({
   cards,
   solved,
   contribution,
-  outcomes,
 }: {
   project: Project;
   cards: ProjectBlock[];
   solved?: ProjectBlock;
   contribution?: ProjectBlock;
-  outcomes?: ProjectBlock;
 }) {
   return (
     <>
@@ -262,8 +281,8 @@ function FullCase({
       {/* ── My Contribution, on its own ────────────────────────────── */}
       {contribution && <Statement block={contribution} />}
 
-      {/* ── Outcomes, after the contribution ───────────────────────── */}
-      {outcomes && <Outcomes block={outcomes} stats={project.stats} />}
+      {/* ── Evidence, after the contribution ───────────────────────── */}
+      {project.evidence && <EvidenceBand evidence={project.evidence} />}
 
       <Gallery project={project} className="mt-20 md:mt-28" />
     </>
@@ -315,34 +334,38 @@ function Statement({ block }: { block: ProjectBlock }) {
 /* ── Coming soon ──────────────────────────────────────────────────── */
 function ComingSoon({ project }: { project: Project }) {
   return (
-    <section className="section shell">
-      <RuleDraw />
-      <div className="grid12 gap-y-8 pt-5">
-        <div className="col-span-12 lg:col-span-4">
-          <span className="t-meta">Coming soon</span>
-          <p className="t-body mt-4 max-w-sm">
-            This case study is being written up. Here is what the page will cover.
-          </p>
-        </div>
+    <>
+      <section className="section shell">
+        <RuleDraw />
+        <div className="grid12 gap-y-8 pt-5">
+          <div className="col-span-12 lg:col-span-4">
+            <span className="t-meta">Coming soon</span>
+            <p className="t-body mt-4 max-w-sm">
+              This case study is being written up. Here is what the page will cover.
+            </p>
+          </div>
 
-        <ul className="col-span-12 lg:col-span-7 lg:col-start-6">
-          {project.willCover?.map((w, i) => (
-            <li key={w}>
-              <Reveal delay={i * 0.05}>
-                <div className="tick-rule flex items-center gap-4 py-5">
-                  <span className="t-meta muted-2 text-[10px]">
-                    ({String(i + 1).padStart(2, "0")})
-                  </span>
-                  <span className="t-row">{w}</span>
-                </div>
-              </Reveal>
-            </li>
-          ))}
-        </ul>
-      </div>
+          <ul className="col-span-12 lg:col-span-7 lg:col-start-6">
+            {project.willCover?.map((w, i) => (
+              <li key={w}>
+                <Reveal delay={i * 0.05}>
+                  <div className="tick-rule flex items-center gap-4 py-5">
+                    <span className="t-meta muted-2 text-[10px]">
+                      ({String(i + 1).padStart(2, "0")})
+                    </span>
+                    <span className="t-row">{w}</span>
+                  </div>
+                </Reveal>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {project.evidence && <EvidenceBand evidence={project.evidence} />}
 
       <Gallery project={project} className="mt-20 md:mt-28" />
-    </section>
+    </>
   );
 }
 
