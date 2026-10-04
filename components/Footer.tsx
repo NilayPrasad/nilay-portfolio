@@ -10,9 +10,10 @@ import Clock from "./Clock";
 import { nav, site } from "@/lib/site";
 
 /**
- * §4.9 — exactly one viewport tall. The content is a 100dvh flex column
- * so nothing here can ever push the page past the fold, and the field
- * holds still while the page above slides off it.
+ * §4.9 — one viewport tall wherever the content fits in one, and taller
+ * where it does not: on a phone the contact, menu, socials, and local
+ * time need more than a screen, and a fixed 100dvh clipped everything
+ * below the menu. The field holds still while the page above slides off it.
  */
 export default function Footer() {
   const ref = useRef<HTMLElement>(null);
@@ -22,11 +23,11 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer ref={ref} className="safe-b relative h-[100dvh] overflow-hidden bg-black text-white">
+    <footer ref={ref} className="safe-b relative min-h-[100dvh] overflow-hidden bg-black text-white">
       <ShaderField opacity={0.5} />
       <div className="absolute inset-0 bg-black/55" />
 
-      <motion.div style={{ y }} className="relative flex h-full flex-col">
+      <motion.div style={{ y }} className="relative flex min-h-[100dvh] flex-col">
         <div className="shell flex flex-1 flex-col justify-center pt-24">
           <div className="grid12 items-end gap-y-8">
             <div className="col-span-12 lg:col-span-8">

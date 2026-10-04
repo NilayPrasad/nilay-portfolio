@@ -101,7 +101,9 @@ export default function ProjectView({ project, next }: { project: Project; next:
             <div className="grid12 items-center gap-y-8">
               <div className="col-span-12 lg:col-span-7">
                 <span className="t-meta muted-2">Next</span>
-                <h2 className="t-section mt-4">
+                {/* t-section's 3rem floor puts "Management" past a 375px
+                    screen, so the floor drops for small phones only. */}
+                <h2 className="t-section mt-4 text-[clamp(2.1rem,8vw,7.5rem)]">
                   <span className="edge-underline">{next.title}</span>
                 </h2>
                 <p className="t-body mt-5 max-w-md">{next.blurb}</p>
@@ -179,7 +181,7 @@ function EvidenceBand({ evidence }: { evidence: Evidence }) {
    would overrun a cell at that size, so it drops to statement size. */
 function MetricCell({ metric, narrow }: { metric: Metric; narrow: boolean }) {
   const numeric = /\d/.test(metric.value);
-  const size = narrow ? "text-[clamp(2.4rem,6.5vw,6rem)]" : "text-[clamp(2.4rem,8vw,7.5rem)]";
+  const size = narrow ? "text-[clamp(2rem,6.5vw,6rem)]" : "text-[clamp(2rem,8vw,7.5rem)]";
   return (
     <div className="rule pt-4">
       <span className={`block leading-none ${numeric ? `t-numeral ${size}` : "t-statement"}`}>

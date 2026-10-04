@@ -104,7 +104,9 @@ export default function Hero() {
         >
           <div className="absolute bottom-0 left-1/4 top-0 w-px bg-white/14" />
 
-          <div className="flex h-full flex-col justify-center">
+          {/* On a phone held sideways the block is barely 220px tall, and
+              centred the name ran under the logo and MENU. */}
+          <div className="flex h-full flex-col justify-center short:pt-16">
             <div className="hero-gutter">
               <FitText as="h1" className="font-medium text-white">
                 {site.wordmark.toUpperCase()}
@@ -137,7 +139,7 @@ function HeroStatic() {
       <div className="relative h-[100dvh] overflow-hidden bg-black">
         <ShaderField />
         <div className="absolute bottom-0 left-1/4 top-0 z-[15] w-px bg-white/14" />
-        <div className="relative z-20 flex h-[66%] flex-col justify-center bg-black">
+        <div className="relative z-20 flex h-[66%] flex-col justify-center bg-black short:pt-16">
           <div className="absolute bottom-0 left-1/4 top-0 w-px bg-white/14" />
           <div className="hero-gutter">
             <FitText as="h1" className="font-medium text-white">

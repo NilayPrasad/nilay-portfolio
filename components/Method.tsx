@@ -9,6 +9,7 @@ import {
   SplitText,
   Reveal,
   EASE,
+  useInView,
 } from "./motion";
 import { useReducedMotion } from "motion/react";
 import { Plus } from "./Monogram";
@@ -221,15 +222,7 @@ function MethodStatic() {
               <div className="tick-rule py-10 md:py-14">
                 {m.video && (
                   <div className="media mb-8 aspect-[16/9] w-full">
-                    <video
-                      className="absolute inset-0 h-full w-full object-cover"
-                      src={m.video}
-                      muted
-                      loop
-                      playsInline
-                      preload="metadata"
-                      aria-hidden
-                    />
+                    <StackedClip src={m.video} />
                   </div>
                 )}
 
@@ -258,5 +251,35 @@ function MethodStatic() {
         </div>
       </div>
     </div>
+  );
+}
+
+/* Plays while on screen, pauses once scrolled past. iOS paints nothing for
+   a metadata-only video until it plays, so the #t fragment asks for the
+   frame at 0.1s up front: a still instead of a black box before playback,
+   and for anyone who has asked for reduced motion. */
+function StackedClip({ src }: { src: string }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const reduce = useReducedMotion();
+  const inView = useInView(ref, { amount: 0.4 });
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    if (inView && !reduce) void v.play().catch(() => {});
+    else v.pause();
+  }, [inView, reduce]);
+
+  return (
+    <video
+      ref={ref}
+      className="absolute inset-0 h-full w-full object-cover"
+      src={`${src}#t=0.1`}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      aria-hidden
+    />
   );
 }

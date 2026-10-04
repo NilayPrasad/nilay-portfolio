@@ -158,10 +158,14 @@ export default function Services() {
     <section id="services" ref={sectionRef} className="section shell">
       <SectionHead label="Service" title="What I Do" intro={serviceIntro} />
 
-      <div className="grid12 mt-16 gap-y-14 md:mt-24 lg:items-center">
+      {/* Turned sideways below lg, the reel sits beside the list as it does
+          on desktop. Stacked full width at 3:4 it ran over a thousand
+          pixels tall on a phone held landscape. grid12 drops to six columns
+          on phones, so the split is its own 7:5 template rather than spans. */}
+      <div className="grid12 mt-16 gap-y-14 md:mt-24 sideways:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] sideways:items-center lg:items-center">
         {/* ── List ────────────────────────────────────────────────── */}
         <ul
-          className="col-span-12 lg:col-span-7 upright:col-span-12"
+          className="col-span-12 sideways:col-span-1 lg:col-span-7 upright:col-span-12"
           onPointerLeave={() => setHovered(null)}
         >
           {services.map((s, i) => (
@@ -246,8 +250,8 @@ export default function Services() {
         </ul>
 
         {/* ── Reel ────────────────────────────────────────────────── */}
-        <div className="rail col-span-12 lg:col-span-4 lg:col-start-9 lg:pl-10 upright:hidden">
-          <div ref={mediaRef} className="media aspect-[3/4] w-full">
+        <div className="rail col-span-12 sideways:col-span-1 lg:col-span-4 lg:col-start-9 lg:pl-10 upright:hidden">
+          <div ref={mediaRef} className="media aspect-[3/4] w-full sideways:max-h-[80svh]">
             {services.map((s, i) => (
               <motion.video
                 key={s.video}

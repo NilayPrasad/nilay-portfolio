@@ -3,6 +3,11 @@
 /* Phones and tablets held upright, up to the 13" iPad Pro (1032px). Keep in
    sync with UPRIGHT in components/Services.tsx. */
 @custom-variant upright (@media (orientation: portrait) and (max-width: 1099.98px));
+/* Phones and tablets turned sideways, below the lg breakpoint. Disjoint
+   from both `upright` and `lg`, so the three never compete. */
+@custom-variant sideways (@media (orientation: landscape) and (max-width: 1199.98px));
+/* Viewports too short for content to centre clear of the fixed nav. */
+@custom-variant short (@media (max-height: 500px));
 
 /* ──────────────────────────────────────────────────────────────────────
    NNP — Design tokens (§2)
