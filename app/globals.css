@@ -8,6 +8,9 @@
 @custom-variant sideways (@media (orientation: landscape) and (max-width: 1199.98px));
 /* Viewports too short for content to centre clear of the fixed nav. */
 @custom-variant short (@media (max-height: 500px));
+/* Phones and tablets, in either orientation: touch is the primary input.
+   Desktops, with a mouse or trackpad, never match. */
+@custom-variant handheld (@media (hover: none) and (pointer: coarse));
 
 /* ──────────────────────────────────────────────────────────────────────
    NNP — Design tokens (§2)

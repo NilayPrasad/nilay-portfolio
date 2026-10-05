@@ -11,9 +11,13 @@ import { Arrow } from "./Monogram";
 import { nav, site } from "@/lib/site";
 
 /**
- * Fixed bar: monogram left, email centred, MENU right, full-width
- * hairline beneath. §4.10 — the overlay wipes down from the top edge and
- * the links stagger in behind it, carrying the same L-tick underlines.
+ * Fixed bar: monogram left, MENU right. §4.10 — the overlay wipes down
+ * from the top edge and the links stagger in behind it, carrying the same
+ * L-tick underlines.
+ *
+ * On desktop the bar is transparent, blends over the page, and sits on a
+ * frosted band. On phones and tablets that blend put the monogram and MENU
+ * straight on top of body copy, so there the bar is a solid black strip.
  */
 export default function Nav() {
   const [open, setOpen] = useState(false);
@@ -86,7 +90,7 @@ export default function Nav() {
       {!open && (
         <motion.div
           aria-hidden
-          className="safe-t pointer-events-none fixed inset-x-0 top-0 z-[55] h-32 box-content backdrop-blur-xl"
+          className="safe-t pointer-events-none fixed inset-x-0 top-0 z-[55] h-32 box-content backdrop-blur-xl handheld:hidden"
           animate={{ y: hidden ? "-110%" : "0%" }}
           transition={{ duration: 0.6, ease: EASE }}
           style={{
@@ -98,16 +102,18 @@ export default function Nav() {
       )}
 
       <motion.header
-        className="fixed inset-x-0 top-0 z-[60] mix-blend-difference"
+        className="fixed inset-x-0 top-0 z-[60] mix-blend-difference handheld:border-b handheld:border-white/10 handheld:bg-black handheld:mix-blend-normal"
         animate={{ y: hidden && !open && !inHero ? "-110%" : "0%" }}
         transition={{ duration: 0.6, ease: EASE }}
         style={{ opacity: open ? 1 : navOpacity, pointerEvents: open ? "auto" : navPointer }}
       >
-        <div className="safe-t relative h-24 box-content text-white">
+        {/* The safe-area padding sits inside the bar, so on a phone the black
+            runs up under the status bar and Dynamic Island too. */}
+        <div className="safe-t relative h-24 box-content text-white handheld:h-16">
           <Link
             href="/"
             aria-label={`${site.fullName}, home`}
-            className="absolute left-6 top-1/2 flex -translate-y-1/2 items-center gap-3 py-3 md:left-8"
+            className="absolute left-[max(1.5rem,env(safe-area-inset-left))] top-1/2 flex -translate-y-1/2 items-center gap-3 py-3 md:left-[max(2rem,env(safe-area-inset-left))]"
           >
 <Logo height={22} />
           </Link>
@@ -117,7 +123,7 @@ export default function Nav() {
               itself can carry padding and grow the hit area invisibly. */}
           <button
             onClick={() => setOpen((v) => !v)}
-            className="t-meta absolute right-6 top-1/2 -translate-y-1/2 px-2 py-3 text-[15px] text-white md:right-6"
+            className="t-meta absolute right-[max(1.5rem,env(safe-area-inset-right))] top-1/2 -translate-y-1/2 px-2 py-3 text-[15px] text-white"
             aria-expanded={open}
             aria-label={open ? "Close menu" : "Open menu"}
           >
