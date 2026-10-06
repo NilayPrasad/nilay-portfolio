@@ -129,10 +129,8 @@ export const projects: Project[] = [
         n: "05",
         label: "My Contribution",
         body: [
-          "This was **full UX and UI ownership**, not a layer applied on top of someone else's structure. I started with the problem rather than the screens: teams were moving between dozens of tools to close a single item, and **most of the delay sat in the handoffs rather than the work**. I wrote the **problem statements**, mapped the **as-is journey** for each process area, and built the **to-be flow** against it so we could see which steps existed only because the old system needed them.",
-          "I built the personas out of the research: the coordinator who owns throughput, the analyst who works exceptions, and the manager who needs a defensible audit trail. Each has a different definition of done, and **the information architecture had to serve all three without becoming three products**. I set the **navigation model**, the hierarchy inside each process area, and the shape of the **agentic review loop**, so **a person can always see what an agent did and why**.",
-          "The interface work followed from that: wireframes, flows, component states, and **a documented design system** with a colour language for agent activity. **Accessibility was specified alongside the components** rather than audited at the end, so contrast, focus order, and state labelling shipped with them.",
-          "**Motion and microinteraction** are part of that interface and I owned them too. Because the system acts on its own, **movement had to carry meaning**: an agent picking work up, deciding autonomously, and escalating to a person each read differently. I specified **timing, easing, and sequencing**, documented them with the component library, then **solved interaction and consistency issues through build** as real data exposed the edge cases.",
+          "I owned **UX and UI end to end**, starting from the problem rather than the screens: **most of the delay sat in the handoffs, not the work**. I wrote the problem statements, mapped **as-is and to-be flows** for each process area, and built personas for the coordinator, analyst, and manager.",
+          "I defined the **information architecture** and the **agentic review loop**, so a person can always see what an agent did and why. Then the interface: flows, component states, a documented design system, **accessibility specified with the components**, and motion that tells agent states apart, refined through build.",
         ],
         items: [
           "Problem statements, as-is and to-be flows",
@@ -237,10 +235,8 @@ export const projects: Project[] = [
         n: "05",
         label: "My Contribution",
         body: [
-          "I owned the **experience end to end** here, from **framing the problem** to the final screens. The brief arrived as a request for dashboards. **The actual problem was that demand and supply data lived in separate systems**, so nobody saw a gap until it had already cost a quarter. I **rewrote that into problem statements** the team could design against.",
-          "I **identified the personas** and what each was really trying to do: the lead forecasting against targets, the business owner watching profitability, and the analyst working exceptions. Mapping their as-is paths showed **how much of the day went to assembling a picture rather than acting on one**, so **the to-be flow put the gap, its cause, and the action on a single surface**.",
-          "That decided the **information architecture**: a module structure that holds revenue, supply, and profitability without burying any of them, a consistent hierarchy inside each card, and **an alert model that separates something to watch from something to act on**. I designed the screens against it, treating **readability and accessibility as structural** given how dense the data is.",
-          "**Motion and microinteraction** sit inside that work rather than beside it. Data-heavy screens punish careless movement, so the real decision was **what earns animation at all**. A chart updating, an alert arriving, and the assistant responding each had to read differently at a glance, and the assistant needed **thinking, streaming, and resolved states** that were distinguishable before a word was read.",
+          "I owned the **experience end to end**. The brief asked for dashboards, but **the real problem was demand and supply data living in separate systems**, so gaps only surfaced after they had cost a quarter. I reframed it into problem statements, identified the personas, and put **the gap, its cause, and the action on one surface**.",
+          "I defined the **information architecture** and **an alert model that separates what to watch from what to act on**, then designed the dashboards and the agentic assistant for readability in dense data. I owned motion too: chart updates, alerts, and the assistant's thinking, streaming, and resolved states each read differently.",
         ],
         items: [
           "Problem statements reframed from the original brief",
@@ -355,10 +351,8 @@ export const projects: Project[] = [
         n: "05",
         label: "My Contribution",
         body: [
-          "This one was **mine end to end**, and the UX work was the larger half of it. I ran the **research and the UX audit** first, because the brief assumed the problem was the software when much of it was the process around it. The problem statements came from what the audit actually found: **enquiries captured twice, follow-ups that depended on memory, and a showroom conversation interrupted by data entry**.",
-          "I built the personas from that. The sales representative works standing up and mid-conversation; the walk-in customer sees the screen for a moment. Their pain points pull in opposite directions, so I mapped both **as-is journeys** and designed the **to-be flow** to **remove the steps that existed for the system rather than the person**. **Several screens in the original path turned out not to need to exist**.",
-          "The **information architecture** split the product into a **CRM mode** and a **customer-facing showcase mode**, so the representative never has to apologise for the interface mid-conversation. I designed the full interface against that structure, delivered a style guide, and treated **accessibility and one-handed reach as constraints from the start** given where the app is used.",
-          "**Motion and microinteraction** were part of that interface work. On a dealership tablet movement does something practical: it confirms an enquiry was captured, orients the representative between the two modes, and gives the customer-facing screens **the feel of a product demo rather than a form**. I kept it light, because **feedback had to be immediate and could never block the next tap**.",
+          "**Solo, end to end.** My research and UX audit showed the problem was **the process as much as the software**: enquiries captured twice, follow-ups that relied on memory, and showroom conversations interrupted by data entry. Mapping both personas' journeys, I **removed the steps that existed for the system rather than the person**.",
+          "I split the product into a **CRM mode** and a **customer-facing showcase mode**, designed the full interface and style guide, treated **accessibility and one-handed reach** as constraints from the start, and kept motion light so feedback is immediate and never blocks the next tap.",
         ],
         items: [
           "Research and a UX audit of the existing process",
@@ -469,10 +463,8 @@ export const projects: Project[] = [
         n: "06",
         label: "My Contribution",
         body: [
-          "This is the project where I was **most hands-on across the whole discipline**. The problem was not that the existing material was badly made. It was that **a 45-minute CXO conversation cannot be a deck**. I framed that as the design problem: **the story had to branch on whatever the room cared about and still land as one argument**.",
-          "I identified **the two audiences** and designed for the tension between them. The presenter needs to steer without appearing to operate software, and the CXOs need to feel the conversation is about their business rather than a standard pitch. I mapped how these sessions ran **as-is**, then built the **to-be structure** around **a spine that holds while any branch can be taken and returned from**.",
-          "From there I set the **information architecture**: overview, differentiators, journey, and case studies, with **every deep-dive guaranteed to return cleanly to the point it branched from**. I designed the interface and the signature moments against that structure, and kept the whole thing **legible at boardroom distance**, which drove type size, contrast, and how much can sit on screen at once.",
-          "**Motion and microinteraction mattered more here than anywhere else**, because a presenter drives it live and any hesitation is visible to the room. I **specified timing to the millisecond**, **paired with the development team through build** rather than handing over a document, and **ran QA by rehearsing the paths a presenter actually takes** until the state and timing issues that only surface at full size were gone.",
+          "The problem was format: **a 45-minute CXO conversation cannot be a deck**. I designed for two audiences, a presenter who must steer without appearing to operate software and CXOs who need it to be about their business, around **a spine any branch can leave and return to**.",
+          "I set the information architecture with **guaranteed return paths**, designed the interface and signature moments to be **legible at boardroom distance**, and **specified motion to the millisecond**. I paired with the development team through build and ran QA by rehearsing the paths presenters actually take.",
         ],
         items: [
           "Framed the problem and the narrative architecture",

@@ -70,7 +70,7 @@ export default function MediaSlot({
         </div>
       ) : (
         <div className="absolute bottom-5 left-5 right-5">
-          <span className="t-meta block text-white/60">{slot.label}</span>
+          <span className="t-meta block text-white/75">{slot.label}</span>
           <span className="t-meta muted mt-1 block">Placeholder</span>
         </div>
       )}

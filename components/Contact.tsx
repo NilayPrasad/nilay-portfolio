@@ -182,7 +182,7 @@ export default function Contact() {
                     rows={4}
                     required
                     placeholder="What are you building?"
-                    className="t-lede w-full resize-none bg-transparent outline-none placeholder:opacity-25"
+                    className="t-lede w-full resize-none bg-transparent outline-none placeholder:opacity-45"
                   />
                 </div>
 
@@ -259,7 +259,7 @@ function Field({
         type={type}
         required={required}
         placeholder={placeholder}
-        className="t-lede w-full bg-transparent outline-none placeholder:opacity-25"
+        className="t-lede w-full bg-transparent outline-none placeholder:opacity-45"
       />
     </div>
   );

@@ -31,7 +31,7 @@ export default function Footer() {
         <div className="shell flex flex-1 flex-col justify-center pt-24">
           <div className="grid12 items-end gap-y-8">
             <div className="col-span-12 lg:col-span-8">
-              <span className="t-meta text-white/60 mb-5 block">Next</span>
+              <span className="t-meta text-white/75 mb-5 block">Next</span>
               <h2 className="t-section">
                 <SplitText stagger={0.022}>Let&rsquo;s Work</SplitText>
                 <br />

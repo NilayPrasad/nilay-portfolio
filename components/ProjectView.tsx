@@ -205,10 +205,10 @@ function Figure({ value }: { value: string }) {
 
   return (
     <span className="inline-flex items-baseline">
-      {prefix && <span className="opacity-50">{prefix}</span>}
+      {prefix && <span className="opacity-70">{prefix}</span>}
       <Counter value={Number(digits)} duration={1.8} />
       {decimals}
-      {suffix && <span className="opacity-40">{suffix}</span>}
+      {suffix && <span className="opacity-60">{suffix}</span>}
     </span>
   );
 }

@@ -116,7 +116,7 @@ function StackCard({
               <h3 className="t-card-title m-0 flex items-baseline gap-3 text-white md:shrink-0">
                 {project.title}
                 {project.status === "soon" && (
-                  <span className="t-meta text-white/55">Coming soon</span>
+                  <span className="t-meta text-white/75">Coming soon</span>
                 )}
               </h3>
 

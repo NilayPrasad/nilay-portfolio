@@ -51,7 +51,7 @@ export default function KeyFeatures() {
                 <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
                   <span className="t-numeral flex items-baseline leading-none">
                     <Counter value={f.value} duration={1.8} />
-                    <span className="opacity-40">%</span>
+                    <span className="opacity-60">%</span>
                   </span>
                   <span className="t-body max-w-sm text-left md:text-right">{f.label}</span>
                 </div>

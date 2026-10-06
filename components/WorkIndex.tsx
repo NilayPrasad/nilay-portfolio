@@ -74,7 +74,7 @@ export default function WorkIndex() {
           </AnimatePresence>
 
           {list.length === 0 && (
-            <p className="t-card py-24 text-center opacity-50">
+            <p className="t-card py-24 text-center opacity-70">
               No projects in this category yet.
             </p>
           )}

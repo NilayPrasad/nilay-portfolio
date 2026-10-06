@@ -51,17 +51,9 @@ export default function About() {
 function AboutHero() {
   return (
     <header className="shell pt-36 md:pt-44">
-      <div className="grid12 items-end gap-y-8">
-        <h1 className="t-wordmark col-span-12 lg:col-span-9">
-          <SplitText stagger={0.03}>About</SplitText>
-        </h1>
-        <div className="col-span-12 lg:col-span-3 lg:pb-5">
-          <Reveal delay={0.15}>
-            <span className="t-meta muted-2 block">Working since</span>
-            <span className="t-lede mt-2 block">2020</span>
-          </Reveal>
-        </div>
-      </div>
+      <h1 className="t-wordmark">
+        <SplitText stagger={0.03}>About</SplitText>
+      </h1>
 
       <Reveal delay={0.2} className="mt-14 md:mt-20">
         <p className="t-lede max-w-4xl">
@@ -111,7 +103,7 @@ function Profile() {
                 <div className="rule pt-3">
                   <span className="t-numeral flex items-baseline leading-none">
                     <Counter value={s.value} duration={1.6} />
-                    <span className="opacity-40">{s.suffix}</span>
+                    <span className="opacity-60">{s.suffix}</span>
                   </span>
                   <span className="t-meta mt-4 block">{s.label}</span>
                 </div>

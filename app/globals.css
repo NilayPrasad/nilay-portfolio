@@ -45,8 +45,8 @@
 :root {
   --bg: #000000;
   --fg: #ffffff;
-  --meta: #8a8c90;
-  --meta-2: #75777c;   /* 4.69:1 on #000, WCAG AA for normal text */
+  --meta: #a7a9ad;     /* 8.9:1 on #000 */
+  --meta-2: #96989c;   /* 7.3:1 on #000; the darker greys read as unlit on phones */
   --line: rgba(255, 255, 255, 0.14);
 
   /* §2.2 — 12 columns, ~1512px content, 5–6vw gutters */
@@ -408,14 +408,15 @@ html.lenis, html.lenis body { height: auto; }
   .muted { color: var(--meta); }
   .muted-2 { color: var(--meta-2); }
 
-  /* Key phrases in case-study copy: full-strength text over a low marker
+  /* Key phrases in case-study copy: white at semibold over a low marker
      band that sweeps in once the passage is on screen (see Copy in
-     ProjectView). The default slice decoration carries one sweep across
-     every line a phrase wraps onto. */
+     ProjectView). Colour alone no longer separates them now the body grey
+     is lighter, so weight carries the emphasis. The default slice
+     decoration carries one sweep across every line a phrase wraps onto. */
   .mark {
     --band: color-mix(in srgb, var(--fg) 22%, transparent);
     color: var(--fg);
-    font-weight: 500;
+    font-weight: 600;
     background: linear-gradient(var(--band), var(--band)) no-repeat 0 80% / 0% 0.55em;
     transition: background-size 0.9s var(--ease) calc(0.2s + var(--i, 0) * 0.12s);
   }
