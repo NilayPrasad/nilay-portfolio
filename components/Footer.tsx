@@ -23,11 +23,11 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer ref={ref} className="safe-b relative min-h-[100dvh] overflow-hidden bg-black text-white">
+    <footer ref={ref} className="safe-b relative min-h-[100svh] overflow-hidden bg-black text-white">
       <ShaderField opacity={0.5} />
       <div className="absolute inset-0 bg-black/55" />
 
-      <motion.div style={{ y }} className="relative flex min-h-[100dvh] flex-col">
+      <motion.div style={{ y }} className="relative flex min-h-[100svh] flex-col">
         <div className="shell flex flex-1 flex-col justify-center pt-24">
           <div className="grid12 items-end gap-y-8">
             <div className="col-span-12 lg:col-span-8">

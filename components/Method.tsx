@@ -1,255 +1,169 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useMotionValueEvent,
-  SplitText,
-  Reveal,
-  EASE,
-  useInView,
-} from "./motion";
+import { motion, useScroll, useTransform, Reveal, useInView } from "./motion";
+import type { MotionValue } from "./motion";
 import { useReducedMotion } from "motion/react";
 import { Plus } from "./Monogram";
 import FitText from "./FitText";
-import { method, methodIntroVideo } from "@/lib/site";
+import { method } from "@/lib/site";
+
+type Step = (typeof method)[number];
 
 /**
- * Method as a side-scrolling track: METHOD, then one full-bleed panel per
- * step, scrubbed horizontally by vertical scroll.
+ * Method: the title, then the four steps as small cards that share one
+ * shape: clip on top, then the step's title, then its description.
  *
- * Each panel's clip is a real background, edge to edge, `object-cover` so
- * it fills both sides without distorting. The copy rides in a glass band
- * across the foot of the panel rather than in a card, so the footage is
- * never boxed in.
+ * On a large screen the section pins for a short stretch of vertical
+ * scroll. METHOD starts full width and centred, rises and shrinks to the
+ * top, and the four cards rise into a single row beneath it before the
+ * page carries on into Awards. Tablets, phones, short laptop screens, and
+ * reduced motion get the same cards in an ordinary grid, two up or stacked.
  */
-type Panel = { n: string; title: string; video: string; body?: string; items?: string[] };
-
-const PANELS: Panel[] = [
-  { n: "", title: "Method", video: methodIntroVideo },
-  ...method,
-];
-const TOTAL = PANELS.length;
-const HOLD = 0.12; // the title panel's share before the track starts moving
+const STAGE = "(min-width: 1200px) and (min-height: 700px)";
+const SHRUNK = 0.34;
+const smooth = (t: number) => t * t * (3 - 2 * t);
 
 export default function Method() {
-  const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
-  const [active, setActive] = useState(0);
+  const [staged, setStaged] = useState(false);
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
+  useEffect(() => {
+    const mq = window.matchMedia(STAGE);
+    const sync = () => setStaged(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
-  /* Linear travel left every panel mid-flight for half its segment. Each
-     one now dwells full-frame for most of its range, then hands off fast. */
-  /* TOTAL segments, not TOTAL-1: dividing by the number of transitions
-     left the last panel arriving exactly at progress 1, so it never got a
-     dwell and the final keyframe was a duplicate. */
-  const SPAN = (1 - HOLD) / TOTAL;
-  const stops: number[] = [0, HOLD];
-  const xKeys: string[] = ["0vw", "0vw"];
-  const iKeys: number[] = [0, 0];
-  for (let i = 0; i < TOTAL - 1; i++) {
-    const end = HOLD + (i + 1) * SPAN;
-    stops.push(end - SPAN * 0.45, end);
-    xKeys.push(`-${i * 100}vw`, `-${(i + 1) * 100}vw`);
-    iKeys.push(i, i + 1);
-  }
-  stops.push(1);
-  xKeys.push(`-${(TOTAL - 1) * 100}vw`);
-  iKeys.push(TOTAL - 1);
-
-  const x = useTransform(scrollYProgress, stops, xKeys);
-  const cursor = useTransform(scrollYProgress, stops, iKeys);
-  const bar = useTransform(scrollYProgress, [HOLD, 1], [1 / TOTAL, 1]);
-
-  useMotionValueEvent(cursor, "change", (v) => setActive(Math.round(v)));
-
-  if (reduce) return <MethodStatic />;
-
-  return (
-    <>
-      {/* A pinned horizontal scrub fights the browser's own gestures on
-          touch, so small screens keep the stacked list. */}
-      <div className="md:hidden">
-        <MethodStatic />
-      </div>
-
-      <section
-        ref={ref}
-        aria-label="Method"
-        className="on-light relative hidden h-[620svh] md:block"
-      >
-        <div className="sticky top-0 h-[100dvh] overflow-hidden">
-          <motion.div
-            className="flex h-full"
-            style={{ x, width: `${TOTAL * 100}vw`, willChange: "transform" }}
-          >
-            {PANELS.map((panel, i) => (
-              <Panel key={panel.title} panel={panel} active={active === i} intro={i === 0} />
-            ))}
-          </motion.div>
-
-          {/* Progress only. The number and the name are on the panel. */}
-          <div className="safe-b pointer-events-none absolute inset-x-0 bottom-0 z-20">
-            <div className="shell pb-10">
-              <span className="relative block h-px w-full bg-black/15">
-                <motion.span
-                  className="absolute inset-y-0 left-0 w-full origin-left bg-black"
-                  style={{ scaleX: bar }}
-                />
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
-  );
+  return staged && !reduce ? <MethodStage /> : <MethodGrid />;
 }
 
-function Panel({
-  panel,
-  active,
-  intro,
-}: {
-  panel: Panel;
-  active: boolean;
-  intro: boolean;
-}) {
-  const video = useRef<HTMLVideoElement>(null);
+function MethodStage() {
+  const ref = useRef<HTMLElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
+  const head = useRef<HTMLDivElement>(null);
+  const title = useRef<HTMLDivElement>(null);
+  /* `drop` is how far below its resting place the title sits when centred;
+     `rest` is where the shrunk title ends, so the card row can centre in
+     the space beneath it. Both measured, because the title's height follows
+     the fitted font size. */
+  const [drop, setDrop] = useState(0);
+  const [rest, setRest] = useState(0);
 
-  /* Only the panel on screen decodes. Five loops at once on a pinned
-     section is a lot of work for frames nobody can see. */
   useEffect(() => {
-    const v = video.current;
-    if (!v) return;
-    if (active) {
-      v.currentTime = 0;
-      void v.play().catch(() => {});
-    } else {
-      v.pause();
-    }
-  }, [active]);
+    const measure = () => {
+      if (!stage.current || !head.current || !title.current) return;
+      const h = title.current.offsetHeight;
+      setDrop(stage.current.clientHeight / 2 - h / 2 - head.current.offsetTop);
+      setRest(head.current.offsetTop + h * SHRUNK);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (stage.current) ro.observe(stage.current);
+    if (title.current) ro.observe(title.current);
+    return () => ro.disconnect();
+  }, []);
+
+  const { scrollYProgress: p } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const rise = useTransform(p, [0, 0.4], [0, 1], { ease: smooth });
+  const y = useTransform(rise, (v) => (1 - v) * drop);
+  const scale = useTransform(rise, [0, 1], [1, SHRUNK]);
 
   return (
-    <div className="relative h-full w-screen shrink-0 overflow-hidden">
-      {/* Graded as shot, no veil. The glass band is what holds the copy
-          legible, so the footage does not need lifting. */}
-      {panel.video && (
-        <video
-          ref={video}
-          className="absolute inset-0 h-full w-full object-cover"
-          src={panel.video}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-hidden
-        />
-      )}
-
-      {/* Steps still waiting on footage get the site's placeholder marks
-          rather than a bare field, so the gap reads as pending. */}
-      {!panel.video && !intro && (
-        <div className="pointer-events-none absolute inset-0" aria-hidden>
-          <div className="hairline absolute inset-10 border-black/15" />
-          <Plus size={10} className="absolute left-9 top-9 text-black/25" />
-          <Plus size={10} className="absolute right-9 top-9 text-black/25" />
-          <Plus size={10} className="absolute bottom-9 left-9 text-black/25" />
-          <Plus size={10} className="absolute bottom-9 right-9 text-black/25" />
-          <span className="t-meta muted-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            Background pending
-          </span>
-        </div>
-      )}
-
-      {intro ? (
-        <div className="absolute inset-0 flex items-center">
-          <div className="shell w-full">
+    <section ref={ref} aria-label="Method" className="on-light grain relative h-[240svh]">
+      <div ref={stage} className="sticky top-0 h-[100lvh] overflow-hidden">
+        <div ref={head} className="shell absolute inset-x-0 top-[13vh]">
+          <motion.div ref={title} style={{ y, scale, transformOrigin: "0 0" }}>
             <FitText as="h2" className="font-semibold">
               METHOD
             </FitText>
+          </motion.div>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 z-10 flex items-center" style={{ top: rest }}>
+          <div className="shell grid grid-cols-4 gap-6">
+            {method.map((m, i) => (
+              <StageCard key={m.n} step={m} index={i} progress={p} />
+            ))}
           </div>
         </div>
-      ) : (
-        /* A band across the foot of the panel, not a card: no border, no
-           radius, full width, so the clip stays the background. 75% white
-           holds the copy at AA even over a fully black frame. */
-        <div className="absolute inset-x-0 bottom-0 backdrop-blur-[28px] bg-white/75">
-          <div className="shell grid12 gap-y-6 py-9 pb-20">
-            <div className="col-span-12 flex items-baseline gap-4 lg:col-span-4">
-              <span className="t-meta shrink-0 text-black/60">{panel.n}</span>
-              <h3 className="t-lede m-0 text-black">
-                <SplitText stagger={0.014}>{panel.title}</SplitText>
-              </h3>
-            </div>
-
-            <p className="t-body col-span-12 m-0 max-w-md text-black/75 lg:col-span-4">
-              {panel.body}
-            </p>
-
-            <ul className="col-span-12 space-y-2.5 lg:col-span-3 lg:col-start-10">
-              {panel.items?.map((it) => (
-                <li key={it} className="t-meta flex items-center gap-2 text-black/65">
-                  <Plus size={8} />
-                  {it}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
-    </div>
+      </div>
+    </section>
   );
 }
 
-/** Stacked fallback: small screens and reduced motion. */
-function MethodStatic() {
+/* Cards rise in left to right while the title is still settling, and are
+   all in place with a stretch of scroll to spare before the pin lets go. */
+function StageCard({
+  step,
+  index,
+  progress,
+}: {
+  step: Step;
+  index: number;
+  progress: MotionValue<number>;
+}) {
+  const start = 0.28 + index * 0.07;
+  const opacity = useTransform(progress, [start, start + 0.2], [0, 1]);
+  const y = useTransform(progress, [start, start + 0.25], [70, 0], { ease: smooth });
+
   return (
-    <div className="on-light grain">
+    <motion.div style={{ opacity, y }}>
+      <StepCard step={step} />
+    </motion.div>
+  );
+}
+
+function MethodGrid() {
+  return (
+    <section aria-label="Method" className="on-light grain relative">
       <div className="section shell">
         <FitText as="h2" className="font-semibold">
           METHOD
         </FitText>
 
-        <div className="mt-16 md:mt-24">
+        <div className="mt-14 grid gap-x-6 gap-y-14 md:mt-20 md:grid-cols-2 lg:grid-cols-4">
           {method.map((m, i) => (
-            <Reveal key={m.n} delay={i * 0.06} y={24}>
-              <div className="tick-rule py-10 md:py-14">
-                {m.video && (
-                  <div className="media mb-8 aspect-[16/9] w-full">
-                    <StackedClip src={m.video} />
-                  </div>
-                )}
-
-                <div className="grid12 gap-y-5">
-                  <div className="col-span-12 flex items-baseline gap-4 lg:col-span-4">
-                    <span className="t-meta muted-2">{m.n}</span>
-                    <h3 className="t-lede m-0">{m.title}</h3>
-                  </div>
-
-                  <p className="t-body col-span-12 max-w-md lg:col-span-4 lg:col-start-6">
-                    {m.body}
-                  </p>
-
-                  <ul className="col-span-12 space-y-2.5 lg:col-span-3 lg:col-start-10">
-                    {m.items.map((it) => (
-                      <li key={it} className="t-meta flex items-center gap-2">
-                        <Plus size={8} />
-                        {it}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
+            <Reveal key={m.n} delay={(i % 2) * 0.08} y={28}>
+              <StepCard step={m} />
             </Reveal>
           ))}
         </div>
       </div>
+    </section>
+  );
+}
+
+function StepCard({ step }: { step: Step }) {
+  return (
+    <article>
+      <div className="media aspect-[16/10] w-full">
+        {step.video ? <StackedClip src={step.video} /> : <PendingClip />}
+      </div>
+
+      <div className="mt-5 flex items-baseline gap-3">
+        <span className="t-meta muted-2">{step.n}</span>
+        <h3 className="t-row m-0">{step.title}</h3>
+      </div>
+
+      <p className="t-body m-0 mt-3">{step.body}</p>
+    </article>
+  );
+}
+
+/* Steps still waiting on footage keep the clip's frame, so the four cards
+   hold one shape and the gap reads as pending rather than broken. */
+function PendingClip() {
+  return (
+    <div className="absolute inset-0" aria-hidden>
+      <Plus size={9} className="absolute left-3 top-3 text-white/30" />
+      <Plus size={9} className="absolute right-3 top-3 text-white/30" />
+      <Plus size={9} className="absolute bottom-3 left-3 text-white/30" />
+      <Plus size={9} className="absolute bottom-3 right-3 text-white/30" />
+      <span className="t-meta absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-white/60">
+        Video pending
+      </span>
     </div>
   );
 }

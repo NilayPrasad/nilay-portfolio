@@ -11,6 +11,9 @@
 /* Phones and tablets, in either orientation: touch is the primary input.
    Desktops, with a mouse or trackpad, never match. */
 @custom-variant handheld (@media (hover: none) and (pointer: coarse));
+/* A wide screen driven by a mouse or trackpad: desktop proper, which
+   excludes an iPad held landscape even though it is as wide. */
+@custom-variant desk (@media (min-width: 810px) and (hover: hover));
 
 /* ──────────────────────────────────────────────────────────────────────
    NNP — Design tokens (§2)

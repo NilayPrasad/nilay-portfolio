@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * The "Kinetic Metal" background shader, ported from the reference build.
@@ -83,27 +83,39 @@ export default function ShaderField({
   // Live params, so prop changes don't force a context rebuild.
   const params = useRef({ speed, frequency, colorScale });
   params.current = { speed, frequency, colorScale };
+  // iOS drops WebGL contexts when the tab is backgrounded or memory runs
+  // short. Bumping this rebuilds the program once the context comes back.
+  const [epoch, setEpoch] = useState(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    const onLost = (e: Event) => e.preventDefault();
+    const onRestored = () => setEpoch((n) => n + 1);
+    canvas.addEventListener("webglcontextlost", onLost);
+    canvas.addEventListener("webglcontextrestored", onRestored);
+    const unlisten = () => {
+      canvas.removeEventListener("webglcontextlost", onLost);
+      canvas.removeEventListener("webglcontextrestored", onRestored);
+    };
+
     const gl = canvas.getContext("webgl", {
       antialias: false,
       powerPreference: "low-power",
     });
-    if (!gl) return;
+    if (!gl) return unlisten;
 
     const vs = compile(gl, gl.VERTEX_SHADER, VERT);
     const fs = compile(gl, gl.FRAGMENT_SHADER, FRAG);
-    if (!vs || !fs) return;
+    if (!vs || !fs) return unlisten;
 
     const program = gl.createProgram();
-    if (!program) return;
+    if (!program) return unlisten;
     gl.attachShader(program, vs);
     gl.attachShader(program, fs);
     gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return unlisten;
     gl.useProgram(program);
 
     const buffer = gl.createBuffer();
@@ -125,17 +137,24 @@ export default function ShaderField({
       baseColor: gl.getUniformLocation(program, "u_baseColor"),
     };
 
+    // Capped DPR: at 8x contrast the extra pixels buy nothing visible and
+    // this runs full-bleed behind several sections at once. On touch it
+    // drops to 1x, which keeps older iPhones smooth and looks the same.
+    const touch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const dprCap = touch ? 1 : 1.5;
+
+    // Reallocating the buffer clears it, so only do it when the pixel size
+    // actually changes, not on every resize event iOS fires as the toolbar
+    // moves.
     const resize = () => {
-      // Capped DPR: at 8x contrast the extra pixels buy nothing visible
-      // and this runs full-bleed behind several sections at once.
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      if (!w || !h) return;
-      canvas.width = Math.floor(w * dpr);
-      canvas.height = Math.floor(h * dpr);
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.uniform2f(u.res, canvas.width, canvas.height);
+      const dpr = Math.min(window.devicePixelRatio || 1, dprCap);
+      const w = Math.floor(canvas.clientWidth * dpr);
+      const h = Math.floor(canvas.clientHeight * dpr);
+      if (!w || !h || (w === canvas.width && h === canvas.height)) return;
+      canvas.width = w;
+      canvas.height = h;
+      gl.viewport(0, 0, w, h);
+      gl.uniform2f(u.res, w, h);
     };
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -159,7 +178,8 @@ export default function ShaderField({
     };
 
     resize();
-    window.addEventListener("resize", resize);
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
 
     // Don't burn frames on a field that's scrolled out of view.
     const io = new IntersectionObserver(
@@ -178,14 +198,15 @@ export default function ShaderField({
 
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener("resize", resize);
+      ro.disconnect();
       io.disconnect();
+      unlisten();
       gl.deleteProgram(program);
       gl.deleteShader(vs);
       gl.deleteShader(fs);
       gl.deleteBuffer(buffer);
     };
-  }, []);
+  }, [epoch]);
 
   return (
     <div className={`absolute inset-0 overflow-hidden bg-[#050505] ${className}`}>

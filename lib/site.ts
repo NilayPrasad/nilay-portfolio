@@ -116,12 +116,9 @@ export const keyFeatures = {
   ],
 };
 
-/** Background for the METHOD title panel, the first stop in the track.
- *  Drop a file into /public and point this at it, e.g. "/method/intro.mp4".
- *  Empty leaves that panel on the flat light field. */
-export const methodIntroVideo = "";
-
 /* ── 05 / Method — the AI-driven, vibe-coded process ─────────────────── */
+/* An empty `video` shows a pending frame in the card. Drop a clip into
+   /public/method and point the step at it to fill it. */
 export const method = [
   {
     n: "01",

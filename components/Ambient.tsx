@@ -135,17 +135,17 @@ export default function Ambient() {
         onClick={toggle}
         aria-pressed={wanted}
         aria-label={wanted ? "Turn background sound off" : "Turn background sound on"}
-        /* On a phone, blended text in the corner lands on top of the copy
-           it is meant to sit beside, so it becomes a contained icon button
-           clear of the home indicator. From md up there is margin to spare
-           and it stays a bare, blended label. */
-        className="t-meta fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-[max(1rem,env(safe-area-inset-right))] z-[70] flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/60 text-white backdrop-blur-md md:bottom-8 md:left-8 md:right-auto md:h-auto md:w-auto md:gap-2.5 md:rounded-none md:border-0 md:bg-transparent md:p-2 md:mix-blend-difference md:backdrop-blur-none"
+        /* On phones and tablets, blended text in the corner lands on top of
+           the copy it is meant to sit beside, so it becomes a contained icon
+           button clear of the home indicator. On a desktop there is margin
+           to spare and it stays a bare, blended label. */
+        className="t-meta fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-[max(1rem,env(safe-area-inset-right))] z-[70] flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/60 text-white backdrop-blur-md desk:bottom-8 desk:left-8 desk:right-auto desk:h-auto desk:w-auto desk:gap-2.5 desk:rounded-none desk:border-0 desk:bg-transparent desk:p-2 desk:mix-blend-difference desk:backdrop-blur-none"
         style={{ opacity: ready ? 1 : 0, pointerEvents: ready ? "auto" : "none" }}
       >
         {/* Without its label, four flat bars read as a "more" ellipsis, so
-            the phone button carries a speaker instead, following intent
+            the touch button carries a speaker instead, following intent
             like the label does. */}
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="md:hidden" aria-hidden>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className="desk:hidden" aria-hidden>
           <path d="M2.5 6.75h2.75L9 3.5v11l-3.75-3.25H2.5z" fill="currentColor" />
           {wanted ? (
             <path
@@ -160,7 +160,7 @@ export default function Ambient() {
         </svg>
 
         {/* Four bars: lifting while it plays, flat when it is not. */}
-        <span className="hidden h-3.5 items-end gap-[2px] md:flex" aria-hidden>
+        <span className="hidden h-3.5 items-end gap-[2px] desk:flex" aria-hidden>
           {[0, 1, 2, 3].map((i) => (
             <motion.span
               key={i}
@@ -177,7 +177,7 @@ export default function Ambient() {
         {/* Text follows intent so it always matches what a click will do;
             the bars follow reality, which is still silent until the browser
             lets the first note through. */}
-        <span className="hidden md:inline">{wanted ? "Sound on" : "Sound off"}</span>
+        <span className="hidden desk:inline">{wanted ? "Sound on" : "Sound off"}</span>
       </button>
     </>
   );
